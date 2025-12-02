@@ -6,9 +6,8 @@ date: 2022-06-09T20:12:52+08:00
 lastmod: 2022-06-09T20:12:52+08:00
 tags:
   - markdown
-  - test
 categories:
-  - test
+  - 文本编辑软件
 math: true
 mermaid: true
 photos:
@@ -505,7 +504,5 @@ $$ -->
 ```
 
 ## 卡片
-
-{{<postLinkCard path="/post/chinese" cover="auto" >}}
 
 {{<externalLinkCard title="Github" link="https://github.com/D-Sketon/hugo-theme-reimu" cover="https://github.githubassets.com/assets/apple-touch-icon-144x144-b882e354c005.png">}}

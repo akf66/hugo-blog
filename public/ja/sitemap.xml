@@ -2,70 +2,70 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/ja/categories/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/categories/"
-                />
+    <loc>http://localhost:37863/ja/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="http://localhost:1313/zh-cn/categories/"
+                href="http://localhost:37863/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:37863/en/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-tw"
-                href="http://localhost:1313/zh-tw/categories/"
+                href="http://localhost:37863/zh-tw/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="http://localhost:1313/ja/categories/"
+                href="http://localhost:37863/ja/categories/"
                 />
   </url><url>
-    <loc>http://localhost:1313/ja/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/"
-                />
+    <loc>http://localhost:37863/ja/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="http://localhost:1313/zh-cn/"
+                href="http://localhost:37863/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:37863/en/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-tw"
-                href="http://localhost:1313/zh-tw/"
+                href="http://localhost:37863/zh-tw/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="http://localhost:1313/ja/"
+                href="http://localhost:37863/ja/tags/"
                 />
   </url><url>
-    <loc>http://localhost:1313/ja/tags/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/tags/"
-                />
+    <loc>http://localhost:37863/ja/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="http://localhost:1313/zh-cn/tags/"
+                href="http://localhost:37863/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:37863/en/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-tw"
-                href="http://localhost:1313/zh-tw/tags/"
+                href="http://localhost:37863/zh-tw/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="http://localhost:1313/ja/tags/"
+                href="http://localhost:37863/ja/"
                 />
   </url>
 </urlset>
