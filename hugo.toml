@@ -1,7 +1,7 @@
 baseURL = 'https://example.org/'
 languageCode = 'en'
 title = 'My New Hugo Site'
-theme = 'hugo-theme-reimu'
+theme = 'reimu'
 
 defaultContentLanguage = 'en'
 [languages]
