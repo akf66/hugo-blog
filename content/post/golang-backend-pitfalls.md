@@ -1,9 +1,8 @@
 ---
-title: "Golang Rand 线性同余的坑"
+title: "Golang Randder线性同余的坑"
 date: 2025-12-02
 tags:
   - Golang后端踩坑
-  - rand
 categories:
   - Golang后端踩坑
 ---

@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on 鼠鼠的自我救赎</title>
-    <link>http://localhost:37863/zh-tw/categories/</link>
+    <link>http://localhost:1313/zh-tw/categories/</link>
     <description>Recent content from 鼠鼠的自我救赎</description>
     <generator>Hugo</generator>
     <language>zh-tw</language>
@@ -13,7 +13,7 @@
     <copyright>本部落格所有文章除特別聲明外，均採用 BY-NC-SA 授權協議。轉載請註明出處！</copyright>
     
     
-    <atom:link href="http://localhost:37863/zh-tw/categories/index.xml" rel="self" type="application/rss&#43;xml" />
+    <atom:link href="http://localhost:1313/zh-tw/categories/index.xml" rel="self" type="application/rss&#43;xml" />
     
 
     
