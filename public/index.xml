@@ -12,7 +12,7 @@
     
     <copyright>本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！</copyright>
     
-    <lastBuildDate>Wed, 03 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 04 Dec 2025 00:00:00 +0000</lastBuildDate>
     
     
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss&#43;xml" />
@@ -22,11 +22,51 @@
     
 
     <item>
+      <title>解决 GVM 安装后 cd 命令失效问题</title>
+      <link>http://localhost:1313/post/devenv/gvm-cd-bug/</link>
+      <pubDate>Thu, 04 Dec 2025 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/devenv/gvm-cd-bug/</guid>
+      <description>
+        <![CDATA[<h1>解决 GVM 安装后 cd 命令失效问题</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <p>在 Ubuntu 上安装 GVM 后，可能会遇到 <code>cd</code> 命令失效的问题。本文记录问题原因及解决方案。</p>
+        
+        <hr><p>本文2025-12-04首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-04</p>]]>
+      </description>
+      
+        <category>开发环境</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>GVM 安装与使用指南</title>
+      <link>http://localhost:1313/post/devenv/gvm-install/</link>
+      <pubDate>Thu, 04 Dec 2025 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/devenv/gvm-install/</guid>
+      <description>
+        <![CDATA[<h1>GVM 安装与使用指南</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <p>GVM (Go Version Manager) 是一个管理多个 Go 版本的工具，方便在不同项目间切换 Go 版本。</p>
+        
+        <hr><p>本文2025-12-04首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-04</p>]]>
+      </description>
+      
+        <category>开发环境</category>
+      
+    </item>
+    
+    
+
+    <item>
       <title>WSL2 磁盘空间释放：使用 DiskPart 压缩虚拟磁盘</title>
-      <link>http://localhost:1313/post/wsl_question/</link>
+      <link>http://localhost:1313/post/devenv/wsl2-disk-compact/</link>
       <pubDate>Wed, 03 Dec 2025 00:00:00 &#43;0000</pubDate>
       <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/wsl_question/</guid>
+      <guid>http://localhost:1313/post/devenv/wsl2-disk-compact/</guid>
       <description>
         <![CDATA[<h1>WSL2 磁盘空间释放：使用 DiskPart 压缩虚拟磁盘</h1><p>作者：AKF（13935468012@163.com）</p>
         
@@ -43,10 +83,10 @@
 
     <item>
       <title>Hertz &#43; Kitex 微服务项目搭建指南</title>
-      <link>http://localhost:1313/post/hert_kitex_start/</link>
+      <link>http://localhost:1313/post/microservice/hertz-kitex-quickstart/</link>
       <pubDate>Wed, 03 Dec 2025 00:00:00 &#43;0000</pubDate>
       <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/hert_kitex_start/</guid>
+      <guid>http://localhost:1313/post/microservice/hertz-kitex-quickstart/</guid>
       <description>
         <![CDATA[<h1>Hertz + Kitex 微服务项目搭建指南</h1><p>作者：AKF（13935468012@163.com）</p>
         
@@ -63,10 +103,10 @@
 
     <item>
       <title>Golang Randder线性同余的坑</title>
-      <link>http://localhost:1313/post/golang-backend-pitfalls/</link>
+      <link>http://localhost:1313/post/golang/rand-pitfalls/</link>
       <pubDate>Tue, 02 Dec 2025 00:00:00 &#43;0000</pubDate>
       <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/golang-backend-pitfalls/</guid>
+      <guid>http://localhost:1313/post/golang/rand-pitfalls/</guid>
       <description>
         <![CDATA[<h1>Golang Randder线性同余的坑</h1><p>作者：AKF（13935468012@163.com）</p>
         

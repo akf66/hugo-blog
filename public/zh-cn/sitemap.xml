@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-04T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -25,17 +25,20 @@
                 href="http://localhost:1313/categories/"
                 />
   </url><url>
-    <loc>http://localhost:1313/tags/hertz/</loc>
-    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/post/golang/</loc>
+    <lastmod>2025-12-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/post/hert_kitex_start/</loc>
-    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/tags/golang%E5%90%8E%E7%AB%AF%E8%B8%A9%E5%9D%91/</loc>
+    <lastmod>2025-12-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/kitex/</loc>
-    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/tags/gvm/</loc>
+    <lastmod>2025-12-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/post/devenv/gvm-install/</loc>
+    <lastmod>2025-12-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-04T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -57,17 +60,20 @@
                 href="http://localhost:1313/tags/"
                 />
   </url><url>
-    <loc>http://localhost:1313/tags/wsl/</loc>
-    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/post/wsl_question/</loc>
-    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/post/devenv/gvm-cd-bug/</loc>
+    <lastmod>2025-12-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</loc>
-    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/post/devenv/</loc>
+    <lastmod>2025-12-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</loc>
+    <lastmod>2025-12-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-04T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -89,19 +95,34 @@
                 href="http://localhost:1313/"
                 />
   </url><url>
+    <loc>http://localhost:1313/post/microservice/</loc>
+    <lastmod>2025-12-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/hertz/</loc>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/post/microservice/hertz-kitex-quickstart/</loc>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/kitex/</loc>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/wsl/</loc>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/post/devenv/wsl2-disk-compact/</loc>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/</loc>
     <lastmod>2025-12-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6/</loc>
     <lastmod>2025-12-03T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/post/golang-backend-pitfalls/</loc>
+    <loc>http://localhost:1313/post/golang/rand-pitfalls/</loc>
     <lastmod>2025-12-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/golang%E5%90%8E%E7%AB%AF%E8%B8%A9%E5%9D%91/</loc>
-    <lastmod>2025-12-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/golang%E5%90%8E%E7%AB%AF%E8%B8%A9%E5%9D%91/</loc>
     <lastmod>2025-12-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/archives/</loc>
