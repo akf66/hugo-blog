@@ -6,6 +6,7 @@ tags:
   - gvm
 categories:
   - 开发环境
+  - Golang后端踩坑
 ---
 
 在 Ubuntu 上安装 GVM 后，可能会遇到 `cd` 命令失效的问题。本文记录问题原因及解决方案。

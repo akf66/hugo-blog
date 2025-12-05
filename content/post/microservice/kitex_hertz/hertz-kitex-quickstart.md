@@ -5,9 +5,9 @@ date: 2025-12-03
 tags:
   - Hertz
   - Kitex
-  - 微服务
-categories:
   - 微服务框架
+categories:
+  - 微服务
 ---
 
 使用 Hertz 作为 HTTP 网关 + Kitex 作为 RPC 微服务的项目搭建流程。
