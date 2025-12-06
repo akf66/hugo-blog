@@ -38,3 +38,7 @@ baseName = "algolia"
 isPlainText = true
 mediaType = "application/json"
 notAlternative = true
+
+
+[pagination]
+  pagerSize = 6 

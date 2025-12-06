@@ -28,7 +28,10 @@
     <loc>http://localhost:1313/tags/go-zero/</loc>
     <lastmod>2025-12-06T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/post/microservice/go-zero/go-zero%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</loc>
+    <loc>http://localhost:1313/post/microservice/go-zero/go-zero_nginx/</loc>
+    <lastmod>2025-12-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/nginx/</loc>
     <lastmod>2025-12-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
@@ -53,9 +56,6 @@
                 hreflang="zh-cn"
                 href="http://localhost:1313/tags/"
                 />
-  </url><url>
-    <loc>http://localhost:1313/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</loc>
-    <lastmod>2025-12-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/</loc>
     <lastmod>2025-12-06T00:00:00+00:00</lastmod>
@@ -92,11 +92,20 @@
                 href="http://localhost:1313/"
                 />
   </url><url>
+    <loc>http://localhost:1313/tags/%E7%BD%91%E5%85%B3/</loc>
+    <lastmod>2025-12-06T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/</loc>
     <lastmod>2025-12-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/</loc>
     <lastmod>2025-12-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/post/microservice/go-zero/go-zero%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</loc>
+    <lastmod>2025-12-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</loc>
+    <lastmod>2025-12-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/%E6%97%A5%E5%BF%97%E9%87%87%E9%9B%86/</loc>
     <lastmod>2025-12-05T00:00:00+00:00</lastmod>
