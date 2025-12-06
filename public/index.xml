@@ -12,12 +12,72 @@
     
     <copyright>本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！</copyright>
     
-    <lastBuildDate>Fri, 05 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 06 Dec 2025 00:00:00 +0000</lastBuildDate>
     
     
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss&#43;xml" />
     
 
+    
+    
+
+    <item>
+      <title>使用 modd 实现 Go 项目热加载</title>
+      <link>http://localhost:1313/post/study/modd%E7%83%AD%E5%8A%A0%E8%BD%BD/</link>
+      <pubDate>Sat, 06 Dec 2025 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/study/modd%E7%83%AD%E5%8A%A0%E8%BD%BD/</guid>
+      <description>
+        <![CDATA[<h1>使用 modd 实现 Go 项目热加载</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <p>modd 是一个轻量级的文件监听工具，可以在代码变更时自动重新编译并重启服务，提升开发效率。</p>
+        
+        <hr><p>本文2025-12-06首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-06</p>]]>
+      </description>
+      
+        <category>开发环境</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>Go-Zero 微服务最佳实践架构</title>
+      <link>http://localhost:1313/post/microservice/go-zero/go-zero%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Sat, 06 Dec 2025 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/microservice/go-zero/go-zero%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</guid>
+      <description>
+        <![CDATA[<h1>Go-Zero 微服务最佳实践架构</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <p>基于 go-zero 的微服务项目目录结构设计，参考 looklook 项目的最佳实践。</p>
+        
+        <hr><p>本文2025-12-06首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-06</p>]]>
+      </description>
+      
+        <category>微服务</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>Go-Zero 微服务网关：Nginx 统一入口实践</title>
+      <link>http://localhost:1313/post/microservice/go-zero/go-zero_nginx/</link>
+      <pubDate>Sat, 06 Dec 2025 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/microservice/go-zero/go-zero_nginx/</guid>
+      <description>
+        <![CDATA[<h1>Go-Zero 微服务网关：Nginx 统一入口实践</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <p>理解 go-zero 中 API 与网关的关系，以及如何使用 Nginx 作为统一流量入口。</p>
+        
+        <hr><p>本文2025-12-06首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-06</p>]]>
+      </description>
+      
+        <category>微服务</category>
+      
+    </item>
     
     
 
