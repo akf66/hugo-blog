@@ -42,26 +42,6 @@
     
 
     <item>
-      <title>Go-Zero 微服务最佳实践架构</title>
-      <link>http://localhost:1313/post/microservice/go-zero/go-zero%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</link>
-      <pubDate>Sat, 06 Dec 2025 00:00:00 &#43;0000</pubDate>
-      <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/microservice/go-zero/go-zero%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</guid>
-      <description>
-        <![CDATA[<h1>Go-Zero 微服务最佳实践架构</h1><p>作者：AKF（13935468012@163.com）</p>
-        
-          <p>基于 go-zero 的微服务项目目录结构设计，参考 looklook 项目的最佳实践。</p>
-        
-        <hr><p>本文2025-12-06首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-06</p>]]>
-      </description>
-      
-        <category>微服务</category>
-      
-    </item>
-    
-    
-
-    <item>
       <title>Go-Zero 微服务网关：Nginx 统一入口实践</title>
       <link>http://localhost:1313/post/microservice/go-zero/go-zero_nginx/</link>
       <pubDate>Sat, 06 Dec 2025 00:00:00 &#43;0000</pubDate>
@@ -91,6 +71,26 @@
         <![CDATA[<h1>微服务日志采集链路：从文件到 Kibana</h1><p>作者：AKF（13935468012@163.com）</p>
         
           <p>理解微服务架构中日志从产生到可搜索的完整流转过程。</p>
+        
+        <hr><p>本文2025-12-05首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-05</p>]]>
+      </description>
+      
+        <category>微服务</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>Go-Zero 微服务最佳实践架构</title>
+      <link>http://localhost:1313/post/microservice/go-zero/go-zero%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Fri, 05 Dec 2025 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/microservice/go-zero/go-zero%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</guid>
+      <description>
+        <![CDATA[<h1>Go-Zero 微服务最佳实践架构</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <p>基于 go-zero 的微服务项目目录结构设计，参考 looklook 项目的最佳实践。</p>
         
         <hr><p>本文2025-12-05首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-05</p>]]>
       </description>

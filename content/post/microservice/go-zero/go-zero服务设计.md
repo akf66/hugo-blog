@@ -1,6 +1,6 @@
 ---
 title: "Go-Zero 微服务最佳实践架构"
-date: 2025-12-06
+date: 2025-12-05
 tags:
   - Go-Zero
   - 微服务

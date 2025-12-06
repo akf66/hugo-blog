@@ -6,16 +6,16 @@
     "updated": "2025-12-06 00:00:00"
   }, 
   {
-    "objectID": "529a9df05fba3e26cc0d5a9ec3dd3c629927134c",
-    "permalink": "/post/microservice/go-zero/go-zero%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/",
-    "title": "Go-Zero 微服务最佳实践架构","content": "基于 go-zero 的微服务项目目录结构设计，参考 looklook 项目的最佳实践。\n整体架构 app/ ├── usercenter/ # 用户中心服务 │ ├── cmd/ │ │ ├── api/ # HTTP API 接口 │ │ └── rpc/ # gRPC 服务 │ └── model/ # 数据模型 (user, userAuth) │ ├── travel/ # 民宿/旅游服务 │ ├── cmd/ │ │ ├── api/ # HTTP API 接口 │ │ └── rpc/ # gRPC 服务 │ └── model/ # 数据模型 (homestay, business, activity, comment) │ ├── order/ # 订单服务 │ ├── cmd/ │ │ ├── api/ # HTTP API 接口 │ │ ├── rpc/ # gRPC 服务 │ │ └── mq/ # 消息队列消费者 │ └── model/ # 数据模型 (homestayOrder) │ ├── payment/ # 支付服务 │ ├── cmd/ │ │ ├── api/ # HTTP API 接口 │ │ └── rpc/ # gRPC 服务 │ └── model/ # 数据模型 (thirdPayment) │ └── mqueue/ # 消息队列服务 └── cmd/ ├── job/ # 延迟任务处理 (如订单超时取消) └── scheduler/ # 定时任务调度 (如定时统计) 服务内部分层 目录 作用 说明 cmd/api/ HTTP API 接口 对外暴露的 RESTful 接口，供前端/客户端调用 cmd/rpc/ gRPC 服务 内部服务间通信，供其他微服务调用 cmd/mq/ 消息队列消费者 处理异步消息（仅 order 服务有） cmd/job/ 延迟任务处理 消费延迟队列中的任务（仅 mqueue 服务） cmd/scheduler/ 定时任务调度 执行周期性定时任务（仅 mqueue 服务） model/ 数据模型层 数据库表映射、CRUD 操作封装 单个服务详细结构 以 usercenter 为例：\nusercenter/ ├── cmd/ │ ├── api/ │ │ ├── desc/ # API 定 …","date": "2025-12-06 00:00:00",
-    "updated": "2025-12-06 00:00:00"
-  }, 
-  {
     "objectID": "88fe1cb9f3562fd74cf132075ebda14e670aa9a1",
     "permalink": "/post/study/modd%E7%83%AD%E5%8A%A0%E8%BD%BD/",
     "title": "使用 modd 实现 Go 项目热加载","content": "modd 是一个轻量级的文件监听工具，可以在代码变更时自动重新编译并重启服务，提升开发效率。\n安装 modd go install github.com/cortesi/modd/cmd/modd@latest 配置文件 在项目根目录创建 modd.conf：\n# usercenter rpc 服务 app/usercenter/cmd/rpc/**/*.go { prep: go build -o data/server/usercenter-rpc -v app/usercenter/cmd/rpc/usercenter.go daemon +sigkill: ./data/server/usercenter-rpc -f app/usercenter/cmd/rpc/etc/usercenter.yaml } 配置解析 1. 文件监听路径 app/usercenter/cmd/rpc/**/*.go ** 表示递归匹配所有子目录，只要这些 .go 文件有任何改动，就触发本条规则。\n2. prep 指令（准备阶段） prep: go build -o data/server/usercenter-rpc -v app/usercenter/cmd/rpc/usercenter.go 把 usercenter.go 及其依赖编译成二进制文件 -o 指定输出路径 -v 显示详细编译过程，方便排错 3. daemon +sigkill（守护进程） daemon +sigkill: ./data/server/usercenter-rpc -f app/usercenter/cmd/rpc/etc/usercenter.yaml 编译成功后，以守护进程方式启动二进制 -f 指定配置文件路径 +sigkill：文件再次变更时，先用 SIGKILL 强制杀掉旧进程，再重新编译启动 启动热加载 modd 工作流程 代码修改 → modd 检测到变更 → 执行 prep 编译 → 杀掉旧进程 → 启动新进程 多服务配置示例 # usercenter rpc app/usercenter/cmd/rpc/**/*.go { prep: go build -o data/server/usercenter-rpc -v app/usercenter/cmd/rpc/usercenter.go daemon +sigkill: ./data/server/usercenter-rpc -f app/usercenter/cmd/rpc/etc/usercenter.yaml } # order rpc app/order/cmd/rpc/**/*.go { prep: go build -o data/server/order-rpc -v app/order/cmd/rpc/order.go daemon +sigkill: ./data/server/order-rpc -f app/order/cmd/rpc/etc/order.yaml } # api gateway app/gateway/cmd/api/**/*.go { prep: go build -o data/server/gateway-api -v app/gateway/cmd/api/gateway.go daemon +sigkill: ./data/server/gateway-api -f app/gateway/cmd/api/etc/gateway.yaml } 这样每个服务独立监听，改哪个重启哪个，互不影响。\n","date": "2025-12-06 00:00:00",
     "updated": "2025-12-06 00:00:00"
+  }, 
+  {
+    "objectID": "529a9df05fba3e26cc0d5a9ec3dd3c629927134c",
+    "permalink": "/post/microservice/go-zero/go-zero%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/",
+    "title": "Go-Zero 微服务最佳实践架构","content": "基于 go-zero 的微服务项目目录结构设计，参考 looklook 项目的最佳实践。\n整体架构 app/ ├── usercenter/ # 用户中心服务 │ ├── cmd/ │ │ ├── api/ # HTTP API 接口 │ │ └── rpc/ # gRPC 服务 │ └── model/ # 数据模型 (user, userAuth) │ ├── travel/ # 民宿/旅游服务 │ ├── cmd/ │ │ ├── api/ # HTTP API 接口 │ │ └── rpc/ # gRPC 服务 │ └── model/ # 数据模型 (homestay, business, activity, comment) │ ├── order/ # 订单服务 │ ├── cmd/ │ │ ├── api/ # HTTP API 接口 │ │ ├── rpc/ # gRPC 服务 │ │ └── mq/ # 消息队列消费者 │ └── model/ # 数据模型 (homestayOrder) │ ├── payment/ # 支付服务 │ ├── cmd/ │ │ ├── api/ # HTTP API 接口 │ │ └── rpc/ # gRPC 服务 │ └── model/ # 数据模型 (thirdPayment) │ └── mqueue/ # 消息队列服务 └── cmd/ ├── job/ # 延迟任务处理 (如订单超时取消) └── scheduler/ # 定时任务调度 (如定时统计) 服务内部分层 目录 作用 说明 cmd/api/ HTTP API 接口 对外暴露的 RESTful 接口，供前端/客户端调用 cmd/rpc/ gRPC 服务 内部服务间通信，供其他微服务调用 cmd/mq/ 消息队列消费者 处理异步消息（仅 order 服务有） cmd/job/ 延迟任务处理 消费延迟队列中的任务（仅 mqueue 服务） cmd/scheduler/ 定时任务调度 执行周期性定时任务（仅 mqueue 服务） model/ 数据模型层 数据库表映射、CRUD 操作封装 单个服务详细结构 以 usercenter 为例：\nusercenter/ ├── cmd/ │ ├── api/ │ │ ├── desc/ # API 定 …","date": "2025-12-05 00:00:00",
+    "updated": "2025-12-05 00:00:00"
   }, 
   {
     "objectID": "f823d360be438e5af93a7eb6219e83b06c906e24",
