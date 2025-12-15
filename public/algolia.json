@@ -12,6 +12,18 @@
     "updated": "2025-12-15 00:00:00"
   }, 
   {
+    "objectID": "c00071561afba14435aebdb5dfd71a1e2496460c",
+    "permalink": "/post/git/usegit_squash/",
+    "title": "Git squash 使用指南","content": " Git Cherry-Pick 使用指南 ","date": "2025-12-15 00:00:00",
+    "updated": "2025-12-15 00:00:00"
+  }, 
+  {
+    "objectID": "e6c8b3af7793b89b88aa6826d239b295a52b9a62",
+    "permalink": "/post/git/uesegit_squash_graph/",
+    "title": "Git squash 图形化使用指南","content": " Git squash 使用指南 ","date": "2025-12-15 00:00:00",
+    "updated": "2025-12-15 00:00:00"
+  }, 
+  {
     "objectID": "6c77a754c2d349bbc7c240fdba490a6be2701a22",
     "permalink": "/post/sdktools/aws-ecr-push-tool/",
     "title": "Go 实现 Docker 镜像自动推送到 AWS ECR","content": " 背景 在微服务架构中，我们经常需要将构建好的 Docker 镜像推送到容器镜像仓库。AWS ECR (Elastic Container Registry) 是 AWS 提供的托管式 Docker 镜像仓库服务。本文将介绍如何使用 Go 编写一个自动化工具，实现 Docker 镜像到 AWS ECR 的推送。\n工具概述 这个工具主要完成以下几个步骤：\n通过 AWS SDK 获取 ECR 认证凭证 为本地 Docker 镜像打标签 登录到 ECR 仓库 推送镜像到 ECR 核心实现 1. 配置结构定义 首先定义配置结构体，包含 ECR 和 EKS 相关配置：\ntype Config struct { // ECR配置 Region string ImageName string ImageTag string RepositoryName string // EKS配置 KubeconfigPath string Namespace string DeploymentName string ContainerName string } 2. 命令行参数解析 使用 Go 标准库的 flag 包解析命令行参数：\nfunc main() { // 命令行参数 region := flag.String(\u0026amp;#34;region\u0026amp;#34;, \u0026amp;#34;us-east-1\u0026amp;#34;, \u0026amp;#34;AWS region\u0026amp;#34;) imageName := flag.String(\u0026amp;#34;image\u0026amp;#34;, \u0026amp;#34;\u0026amp;#34;, \u0026amp;#34;Local image name\u0026amp;#34;) imageTag := flag.String(\u0026amp;#34;tag\u0026amp;#34;, fmt.Sprintf(\u0026amp;#34;%d\u0026amp;#34;, time.Now().Unix()), \u0026amp;#34;Image tag (default: unix timestamp)\u0026amp;#34;) repoName := flag.String(\u0026amp;#34;repo\u0026amp;#34;, \u0026amp;#34;your-org/your-service\u0026amp;#34;, \u0026amp;#34;ECR repository name\u0026amp;#34;) flag.Parse() config := \u0026amp;amp;Config{ Region: *region, ImageName: …","date": "2025-12-14 00:00:00",
