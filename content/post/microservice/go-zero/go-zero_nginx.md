@@ -158,3 +158,7 @@ func (l *DetailLogic) Detail(req types.UserInfoReq) (*types.UserInfoResp, error)
 - 统一入口，便于日志收集和行为分析
 - 各服务独立部署，互不影响
 - 鉴权在 API 层统一处理，RPC 层专注业务
+
+## 参考资料
+
+- [go-zero-looklook](https://github.com/Mikaelemmmm/go-zero-looklook) - go-zero 微服务最佳实践项目

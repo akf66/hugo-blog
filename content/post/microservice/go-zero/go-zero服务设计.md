@@ -214,3 +214,7 @@ kafka-topics.sh --create \
 3. **model 层复用**：同一服务的 api 和 rpc 共享 model
 4. **异步任务独立**：mq、job、scheduler 单独部署，不影响主服务
 5. **统一代码风格**：使用 `--style=goZero` 保持小驼峰命名一致性
+
+## 参考资料
+
+- [go-zero-looklook](https://github.com/Mikaelemmmm/go-zero-looklook) - go-zero 微服务最佳实践项目

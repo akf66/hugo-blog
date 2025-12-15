@@ -12,12 +12,79 @@
     
     <copyright>本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！</copyright>
     
-    <lastBuildDate>Sat, 06 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 14 Dec 2025 00:00:00 +0000</lastBuildDate>
     
     
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss&#43;xml" />
     
 
+    
+    
+
+    <item>
+      <title>Go 实现 Docker 镜像自动推送到 AWS ECR</title>
+      <link>http://localhost:1313/post/sdktools/aws-ecr-push-tool/</link>
+      <pubDate>Sun, 14 Dec 2025 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/sdktools/aws-ecr-push-tool/</guid>
+      <description>
+        <![CDATA[<h1>Go 实现 Docker 镜像自动推送到 AWS ECR</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <h2 id="背景">
+<a class="header-anchor" href="#%e8%83%8c%e6%99%af"></a>
+背景
+</h2><p>在微服务架构中，我们经常需要将构建好的 Docker 镜像推送到容器镜像仓库。AWS ECR (Elastic Container Registry) 是 AWS 提供的托管式 Docker 镜像仓库服务。本文将介绍如何使用 Go 编写一个自动化工具，实现 Docker 镜像到 AWS ECR 的推送。</p>
+        
+        <hr><p>本文2025-12-14首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-14</p>]]>
+      </description>
+      
+        <category>云原生</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>Go Build Tag：条件编译的正确姿势</title>
+      <link>http://localhost:1313/post/golang/go-build-tag/</link>
+      <pubDate>Sat, 13 Dec 2025 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/golang/go-build-tag/</guid>
+      <description>
+        <![CDATA[<h1>Go Build Tag：条件编译的正确姿势</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <p>Build Tag 是 Go 的条件编译机制，让你控制哪些文件参与编译。简单说就是给文件打个&quot;标签&quot;，编译时可以选择性地包含或排除这些文件。</p>
+        
+        <hr><p>本文2025-12-13首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-13</p>]]>
+      </description>
+      
+        <category>Golang后端踩坑</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>鉴权登录限制设置</title>
+      <link>http://localhost:1313/post/usefeat/go-zero-jwt-limiter/</link>
+      <pubDate>Wed, 10 Dec 2025 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/usefeat/go-zero-jwt-limiter/</guid>
+      <description>
+        <![CDATA[<h1>鉴权登录限制设置</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <h2 id="前言">
+<a class="header-anchor" href="#%e5%89%8d%e8%a8%80"></a>
+前言
+</h2><p>在实际业务中，我们经常需要限制用户的同时登录设备数量。比如视频会员只允许同时在 2 台设备上登录，第 3 台设备登录时会把最早的那个踢下线。</p>
+<p>本文介绍如何在 Go-Zero 框架中实现这个功能。</p>
+        
+        <hr><p>本文2025-12-10首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-10</p>]]>
+      </description>
+      
+        <category>微服务</category><category>功能设计</category>
+      
+    </item>
     
     
 
@@ -51,6 +118,29 @@
         <![CDATA[<h1>Go-Zero 微服务网关：Nginx 统一入口实践</h1><p>作者：AKF（13935468012@163.com）</p>
         
           <p>理解 go-zero 中 API 与网关的关系，以及如何使用 Nginx 作为统一流量入口。</p>
+        
+        <hr><p>本文2025-12-06首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-06</p>]]>
+      </description>
+      
+        <category>微服务</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>Go-Zero 鉴权</title>
+      <link>http://localhost:1313/post/microservice/go-zero/go-zero%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/</link>
+      <pubDate>Sat, 06 Dec 2025 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/microservice/go-zero/go-zero%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/</guid>
+      <description>
+        <![CDATA[<h1>Go-Zero 鉴权</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <h4 id="11-go-zero-jwt">
+<a class="header-anchor" href="#11-go-zero-jwt"></a>
+1.1 go-zero jwt
+</h4><p>上一节我们提到了，在desc/api文件中我们定义了go-zero自带的jwt中间件，生成代码后我们可以看到定义了jwt的api服务的路由，这里我们以usercenter服务举例，我们可以看下 go-zero-looklook/app/usercenter/cmd/api/internal/handler/routes.go 代码如下</p>
         
         <hr><p>本文2025-12-06首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-06</p>]]>
       </description>
@@ -136,86 +226,6 @@
       </description>
       
         <category>开发环境</category>
-      
-    </item>
-    
-    
-
-    <item>
-      <title>Go-Zero 快速入门指南</title>
-      <link>http://localhost:1313/post/microservice/go-zero/zero_start/</link>
-      <pubDate>Thu, 04 Dec 2025 00:00:00 &#43;0000</pubDate>
-      <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/microservice/go-zero/zero_start/</guid>
-      <description>
-        <![CDATA[<h1>Go-Zero 快速入门指南</h1><p>作者：AKF（13935468012@163.com）</p>
-        
-          <p>Go-Zero 是一个集成了各种工程实践的 Web 和 RPC 框架，本文记录从零开始搭建 Go-Zero 开发环境的完整流程。</p>
-        
-        <hr><p>本文2025-12-04首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-04</p>]]>
-      </description>
-      
-        <category>微服务</category>
-      
-    </item>
-    
-    
-
-    <item>
-      <title>WSL2 磁盘空间释放：使用 DiskPart 压缩虚拟磁盘</title>
-      <link>http://localhost:1313/post/devenv/wsl2-disk-compact/</link>
-      <pubDate>Wed, 03 Dec 2025 00:00:00 &#43;0000</pubDate>
-      <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/devenv/wsl2-disk-compact/</guid>
-      <description>
-        <![CDATA[<h1>WSL2 磁盘空间释放：使用 DiskPart 压缩虚拟磁盘</h1><p>作者：AKF（13935468012@163.com）</p>
-        
-          <p>WSL2 删除文件后磁盘空间不释放？用 DiskPart 压缩虚拟磁盘解决。</p>
-        
-        <hr><p>本文2025-12-03首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-03</p>]]>
-      </description>
-      
-        <category>开发环境</category>
-      
-    </item>
-    
-    
-
-    <item>
-      <title>Hertz &#43; Kitex 微服务项目搭建指南</title>
-      <link>http://localhost:1313/post/microservice/kitex_hertz/hertz-kitex-quickstart/</link>
-      <pubDate>Wed, 03 Dec 2025 00:00:00 &#43;0000</pubDate>
-      <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/microservice/kitex_hertz/hertz-kitex-quickstart/</guid>
-      <description>
-        <![CDATA[<h1>Hertz + Kitex 微服务项目搭建指南</h1><p>作者：AKF（13935468012@163.com）</p>
-        
-          <p>使用 Hertz 作为 HTTP 网关 + Kitex 作为 RPC 微服务的项目搭建流程。</p>
-        
-        <hr><p>本文2025-12-03首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-03</p>]]>
-      </description>
-      
-        <category>微服务</category>
-      
-    </item>
-    
-    
-
-    <item>
-      <title>Golang Randder线性同余的坑</title>
-      <link>http://localhost:1313/post/golang/rand-pitfalls/</link>
-      <pubDate>Tue, 02 Dec 2025 00:00:00 &#43;0000</pubDate>
-      <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/golang/rand-pitfalls/</guid>
-      <description>
-        <![CDATA[<h1>Golang Randder线性同余的坑</h1><p>作者：AKF（13935468012@163.com）</p>
-        
-          <p>记录 Golang <code>math/rand</code> 使用线性同余算法（LCG）带来的问题。</p>
-        
-        <hr><p>本文2025-12-02首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-02</p>]]>
-      </description>
-      
-        <category>Golang后端踩坑</category>
       
     </item>
     
