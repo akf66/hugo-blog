@@ -12,12 +12,58 @@
     
     <copyright>本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！</copyright>
     
-    <lastBuildDate>Sun, 14 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 15 Dec 2025 00:00:00 +0000</lastBuildDate>
     
     
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss&#43;xml" />
     
 
+    
+    
+
+    <item>
+      <title>Git Cherry-Pick 图形化使用指南</title>
+      <link>http://localhost:1313/post/git/usegit_grpah/</link>
+      <pubDate>Mon, 15 Dec 2025 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/git/usegit_grpah/</guid>
+      <description>
+        <![CDATA[<h1>Git Cherry-Pick 图形化使用指南</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <h2 id="前言">
+<a class="header-anchor" href="#%e5%89%8d%e8%a8%80"></a>
+前言
+</h2><p>相比命令行操作，使用图形化 Git 工具进行 cherry-pick 更加直观和便捷。本文将通过实际截图演示如何使用图形化工具（如 GitKraken、SourceTree、VS Code Git Graph 等）完成 cherry-pick 操作。</p>
+        
+        <hr><p>本文2025-12-15首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-15</p>]]>
+      </description>
+      
+        <category>git</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>Git Cherry-Pick 使用指南</title>
+      <link>http://localhost:1313/post/git/usegit/</link>
+      <pubDate>Mon, 15 Dec 2025 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/git/usegit/</guid>
+      <description>
+        <![CDATA[<h1>Git Cherry-Pick 使用指南</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <h2 id="什么是-cherry-pick">
+<a class="header-anchor" href="#%e4%bb%80%e4%b9%88%e6%98%af-cherry-pick"></a>
+什么是 Cherry-Pick？
+</h2><p>Cherry-pick 是 Git 中一个强大的功能，它允许你从一个分支中选择特定的提交（commit），并将其应用到另一个分支上。这在需要将某些特定的修改从一个分支移植到另一个分支时非常有用。</p>
+        
+        <hr><p>本文2025-12-15首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-15</p>]]>
+      </description>
+      
+        <category>git</category>
+      
+    </item>
     
     
 
@@ -186,46 +232,6 @@
       </description>
       
         <category>微服务</category>
-      
-    </item>
-    
-    
-
-    <item>
-      <title>解决 GVM 安装后 cd 命令失效问题</title>
-      <link>http://localhost:1313/post/devenv/gvm-cd-bug/</link>
-      <pubDate>Thu, 04 Dec 2025 00:00:00 &#43;0000</pubDate>
-      <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/devenv/gvm-cd-bug/</guid>
-      <description>
-        <![CDATA[<h1>解决 GVM 安装后 cd 命令失效问题</h1><p>作者：AKF（13935468012@163.com）</p>
-        
-          <p>在 Ubuntu 上安装 GVM 后，可能会遇到 <code>cd</code> 命令失效的问题。本文记录问题原因及解决方案。</p>
-        
-        <hr><p>本文2025-12-04首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-04</p>]]>
-      </description>
-      
-        <category>开发环境</category><category>Golang后端踩坑</category>
-      
-    </item>
-    
-    
-
-    <item>
-      <title>GVM 安装与使用指南</title>
-      <link>http://localhost:1313/post/devenv/gvm-install/</link>
-      <pubDate>Thu, 04 Dec 2025 00:00:00 &#43;0000</pubDate>
-      <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/devenv/gvm-install/</guid>
-      <description>
-        <![CDATA[<h1>GVM 安装与使用指南</h1><p>作者：AKF（13935468012@163.com）</p>
-        
-          <p>GVM (Go Version Manager) 是一个管理多个 Go 版本的工具，方便在不同项目间切换 Go 版本。</p>
-        
-        <hr><p>本文2025-12-04首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-04</p>]]>
-      </description>
-      
-        <category>开发环境</category>
       
     </item>
     
