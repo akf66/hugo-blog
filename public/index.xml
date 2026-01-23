@@ -12,12 +12,54 @@
     
     <copyright>本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！</copyright>
     
-    <lastBuildDate>Mon, 15 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 08 Jan 2026 00:00:00 +0000</lastBuildDate>
     
     
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss&#43;xml" />
     
 
+    
+    
+
+    <item>
+      <title>订单支付链接缓存设计：为什么是 9 分 30 秒？</title>
+      <link>http://localhost:1313/post/golang/order-cache-ttl-design/</link>
+      <pubDate>Thu, 08 Jan 2026 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/golang/order-cache-ttl-design/</guid>
+      <description>
+        <![CDATA[<h1>订单支付链接缓存设计：为什么是 9 分 30 秒？</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <p>在支付系统中，生成支付链接是一个常见的操作。如果用户频繁点击&quot;支付&quot;按钮，每次都调用支付平台 API 创建新订单，不仅浪费资源，还可能触发风控。所以我们通常会缓存支付链接。</p>
+<p>但缓存时间设置多少才合理？这篇文章通过分析一个真实的代码片段，来讲解这背后的设计思路。</p>
+        
+        <hr><p>本文2026-01-08首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2026-01-08</p>]]>
+      </description>
+      
+        <category>Golang后端踩坑</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>Go 定时任务完全指南：robfig/cron 库详解</title>
+      <link>http://localhost:1313/post/golang/robfig-cron-guide/</link>
+      <pubDate>Thu, 08 Jan 2026 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:1313/post/golang/robfig-cron-guide/</guid>
+      <description>
+        <![CDATA[<h1>Go 定时任务完全指南：robfig/cron 库详解</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <p>在后端开发中，定时任务是常见的需求：定期清理过期数据、发送定时通知、定时同步数据等。Go 的 <code>robfig/cron</code> 库提供了一个简洁而强大的解决方案。</p>
+<p>这篇文章通过实际例子，详细讲解如何使用 cron 库来实现各种定时任务。</p>
+        
+        <hr><p>本文2026-01-08首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2026-01-08</p>]]>
+      </description>
+      
+        <category>Golang后端踩坑</category>
+      
+    </item>
     
     
 
@@ -195,49 +237,6 @@ Git Cherry-Pick 使用指南
       </description>
       
         <category>开发环境</category>
-      
-    </item>
-    
-    
-
-    <item>
-      <title>Go-Zero 微服务网关：Nginx 统一入口实践</title>
-      <link>http://localhost:1313/post/microservice/go-zero/go-zero_nginx/</link>
-      <pubDate>Sat, 06 Dec 2025 00:00:00 &#43;0000</pubDate>
-      <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/microservice/go-zero/go-zero_nginx/</guid>
-      <description>
-        <![CDATA[<h1>Go-Zero 微服务网关：Nginx 统一入口实践</h1><p>作者：AKF（13935468012@163.com）</p>
-        
-          <p>理解 go-zero 中 API 与网关的关系，以及如何使用 Nginx 作为统一流量入口。</p>
-        
-        <hr><p>本文2025-12-06首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-06</p>]]>
-      </description>
-      
-        <category>微服务</category>
-      
-    </item>
-    
-    
-
-    <item>
-      <title>Go-Zero 鉴权</title>
-      <link>http://localhost:1313/post/microservice/go-zero/go-zero%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/</link>
-      <pubDate>Sat, 06 Dec 2025 00:00:00 &#43;0000</pubDate>
-      <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/microservice/go-zero/go-zero%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/</guid>
-      <description>
-        <![CDATA[<h1>Go-Zero 鉴权</h1><p>作者：AKF（13935468012@163.com）</p>
-        
-          <h4 id="11-go-zero-jwt">
-<a class="header-anchor" href="#11-go-zero-jwt"></a>
-1.1 go-zero jwt
-</h4><p>上一节我们提到了，在desc/api文件中我们定义了go-zero自带的jwt中间件，生成代码后我们可以看到定义了jwt的api服务的路由，这里我们以usercenter服务举例，我们可以看下 go-zero-looklook/app/usercenter/cmd/api/internal/handler/routes.go 代码如下</p>
-        
-        <hr><p>本文2025-12-06首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-06</p>]]>
-      </description>
-      
-        <category>微服务</category>
       
     </item>
     
