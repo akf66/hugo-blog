@@ -407,24 +407,37 @@ c.Start()
 ### Q3: 如何优雅地关闭 cron？
 
 ```go
-c := cron.New()
+package main
 
-c.AddFunc("0 */20 * * * *", func() {
-    fmt.Println("执行任务")
-})
+import (
+    "fmt"
+    "os"
+    "os/signal"
+    "syscall"
+    "github.com/robfig/cron/v3"
+)
 
-c.Start()
+func main() {
+    c := cron.New()
 
-// 监听关闭信号
-sigChan := make(chan os.Signal, 1)
-signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+    c.AddFunc("0 */20 * * * *", func() {
+        fmt.Println("执行任务")
+    })
 
-<-sigChan
-fmt.Println("收到关闭信号")
+    c.Start()
 
-// 停止 cron（不会中断正在执行的任务）
-ctx := c.Stop()
-fmt.Println("Cron 已停止")
+    // 监听关闭信号
+    sigChan := make(chan os.Signal, 1)
+    signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+
+    <-sigChan
+    fmt.Println("收到关闭信号")
+
+    // 停止 cron（会等待正在执行的任务完成）
+    ctx := c.Stop()
+    <-ctx.Done()
+    fmt.Println("Cron 已停止")
+}
 ```
 
 ### Q4: 如何测试 cron 任务？

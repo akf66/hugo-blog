@@ -1,6 +1,6 @@
 ---
 title: "在本地单机快速搭建 Kubernetes：k3s 从安装到彻底用 kubectl 命令"
-date: 2026-01-23
+date: 2026-01-22
 tags:
   - 开发环境
   - k3s

@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>鼠鼠的自我救赎</title>
-    <link>http://localhost:1313/algolia.json</link>
+    <link>http://localhost:33681/algolia.json</link>
     <description>Recent content from 鼠鼠的自我救赎</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
@@ -12,28 +12,53 @@
     
     <copyright>本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！</copyright>
     
-    <lastBuildDate>Thu, 08 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 22 Jan 2026 00:00:00 +0000</lastBuildDate>
     
     
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss&#43;xml" />
+    <atom:link href="http://localhost:33681/index.xml" rel="self" type="application/rss&#43;xml" />
     
 
     
     
 
     <item>
+      <title>在本地单机快速搭建 Kubernetes：k3s 从安装到彻底用 kubectl 命令</title>
+      <link>http://localhost:33681/post/devenv/k3s-install-kubectl/</link>
+      <pubDate>Thu, 22 Jan 2026 00:00:00 &#43;0000</pubDate>
+      <author>13935468012@163.com (AKF)</author>
+      <guid>http://localhost:33681/post/devenv/k3s-install-kubectl/</guid>
+      <description>
+        <![CDATA[<h1>在本地单机快速搭建 Kubernetes：k3s 从安装到彻底用 kubectl 命令</h1><p>作者：AKF（13935468012@163.com）</p>
+        
+          <p>最近在本地机器上折腾轻量级 Kubernetes 时，发现 <strong>k3s</strong> 仍然是目前最省心、最省资源的单机/边缘/开发环境选择。</p>
+<p>但很多人（包括我一开始）都会遇到一个很烦人的问题：</p>
+<blockquote>
+<p>为什么每次都要打 <code>sudo k3s kubectl get pods</code> 这么长一串？有没有办法像正常 k8s 集群一样，直接敲 <code>kubectl</code> 就行？</p>
+</blockquote>
+<p>本文就完整记录一次从 <strong>零开始安装 k3s</strong> 到 <strong>彻底改成只用 kubectl</strong> 的全过程，适用于 Ubuntu/Debian/CentOS 等主流 Linux 系统。</p>
+        
+        <hr><p>本文2026-01-22首发于<a href='http://localhost:33681/'>鼠鼠的自我救赎</a>，最后修改于2026-01-22</p>]]>
+      </description>
+      
+        <category>开发环境</category>
+      
+    </item>
+    
+    
+
+    <item>
       <title>订单支付链接缓存设计：为什么是 9 分 30 秒？</title>
-      <link>http://localhost:1313/post/golang/order-cache-ttl-design/</link>
+      <link>http://localhost:33681/post/golang/order-cache-ttl-design/</link>
       <pubDate>Thu, 08 Jan 2026 00:00:00 &#43;0000</pubDate>
       <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/golang/order-cache-ttl-design/</guid>
+      <guid>http://localhost:33681/post/golang/order-cache-ttl-design/</guid>
       <description>
         <![CDATA[<h1>订单支付链接缓存设计：为什么是 9 分 30 秒？</h1><p>作者：AKF（13935468012@163.com）</p>
         
           <p>在支付系统中，生成支付链接是一个常见的操作。如果用户频繁点击&quot;支付&quot;按钮，每次都调用支付平台 API 创建新订单，不仅浪费资源，还可能触发风控。所以我们通常会缓存支付链接。</p>
 <p>但缓存时间设置多少才合理？这篇文章通过分析一个真实的代码片段，来讲解这背后的设计思路。</p>
         
-        <hr><p>本文2026-01-08首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2026-01-08</p>]]>
+        <hr><p>本文2026-01-08首发于<a href='http://localhost:33681/'>鼠鼠的自我救赎</a>，最后修改于2026-01-08</p>]]>
       </description>
       
         <category>Golang后端踩坑</category>
@@ -44,17 +69,17 @@
 
     <item>
       <title>Go 定时任务完全指南：robfig/cron 库详解</title>
-      <link>http://localhost:1313/post/golang/robfig-cron-guide/</link>
+      <link>http://localhost:33681/post/golang/robfig-cron-guide/</link>
       <pubDate>Thu, 08 Jan 2026 00:00:00 &#43;0000</pubDate>
       <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/golang/robfig-cron-guide/</guid>
+      <guid>http://localhost:33681/post/golang/robfig-cron-guide/</guid>
       <description>
         <![CDATA[<h1>Go 定时任务完全指南：robfig/cron 库详解</h1><p>作者：AKF（13935468012@163.com）</p>
         
           <p>在后端开发中，定时任务是常见的需求：定期清理过期数据、发送定时通知、定时同步数据等。Go 的 <code>robfig/cron</code> 库提供了一个简洁而强大的解决方案。</p>
 <p>这篇文章通过实际例子，详细讲解如何使用 cron 库来实现各种定时任务。</p>
         
-        <hr><p>本文2026-01-08首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2026-01-08</p>]]>
+        <hr><p>本文2026-01-08首发于<a href='http://localhost:33681/'>鼠鼠的自我救赎</a>，最后修改于2026-01-08</p>]]>
       </description>
       
         <category>Golang后端踩坑</category>
@@ -65,10 +90,10 @@
 
     <item>
       <title>Git squash 图形化使用指南</title>
-      <link>http://localhost:1313/post/git/uesegit_squash_graph/</link>
+      <link>http://localhost:33681/post/git/uesegit_squash_graph/</link>
       <pubDate>Mon, 15 Dec 2025 00:00:00 &#43;0000</pubDate>
       <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/git/uesegit_squash_graph/</guid>
+      <guid>http://localhost:33681/post/git/uesegit_squash_graph/</guid>
       <description>
         <![CDATA[<h1>Git squash 图形化使用指南</h1><p>作者：AKF（13935468012@163.com）</p>
         
@@ -77,7 +102,7 @@
 Git squash  使用指南
 </h1>
         
-        <hr><p>本文2025-12-15首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-15</p>]]>
+        <hr><p>本文2025-12-15首发于<a href='http://localhost:33681/'>鼠鼠的自我救赎</a>，最后修改于2025-12-15</p>]]>
       </description>
       
         <category>git</category>
@@ -88,10 +113,10 @@ Git squash  使用指南
 
     <item>
       <title>Git squash 使用指南</title>
-      <link>http://localhost:1313/post/git/usegit_squash/</link>
+      <link>http://localhost:33681/post/git/usegit_squash/</link>
       <pubDate>Mon, 15 Dec 2025 00:00:00 &#43;0000</pubDate>
       <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/git/usegit_squash/</guid>
+      <guid>http://localhost:33681/post/git/usegit_squash/</guid>
       <description>
         <![CDATA[<h1>Git squash 使用指南</h1><p>作者：AKF（13935468012@163.com）</p>
         
@@ -100,7 +125,7 @@ Git squash  使用指南
 Git Cherry-Pick 使用指南
 </h1>
         
-        <hr><p>本文2025-12-15首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-15</p>]]>
+        <hr><p>本文2025-12-15首发于<a href='http://localhost:33681/'>鼠鼠的自我救赎</a>，最后修改于2025-12-15</p>]]>
       </description>
       
         <category>git</category>
@@ -111,10 +136,10 @@ Git Cherry-Pick 使用指南
 
     <item>
       <title>Git Cherry-Pick 图形化使用指南</title>
-      <link>http://localhost:1313/post/git/usegit_grpah/</link>
+      <link>http://localhost:33681/post/git/usegit_grpah/</link>
       <pubDate>Mon, 15 Dec 2025 00:00:00 &#43;0000</pubDate>
       <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/git/usegit_grpah/</guid>
+      <guid>http://localhost:33681/post/git/usegit_grpah/</guid>
       <description>
         <![CDATA[<h1>Git Cherry-Pick 图形化使用指南</h1><p>作者：AKF（13935468012@163.com）</p>
         
@@ -123,7 +148,7 @@ Git Cherry-Pick 使用指南
 前言
 </h2><p>相比命令行操作，使用图形化 Git 工具进行 cherry-pick 更加直观和便捷。本文将通过实际截图演示如何使用图形化工具（如 GitKraken、SourceTree、VS Code Git Graph 等）完成 cherry-pick 操作。</p>
         
-        <hr><p>本文2025-12-15首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-15</p>]]>
+        <hr><p>本文2025-12-15首发于<a href='http://localhost:33681/'>鼠鼠的自我救赎</a>，最后修改于2025-12-15</p>]]>
       </description>
       
         <category>git</category>
@@ -134,10 +159,10 @@ Git Cherry-Pick 使用指南
 
     <item>
       <title>Git Cherry-Pick 使用指南</title>
-      <link>http://localhost:1313/post/git/usegit/</link>
+      <link>http://localhost:33681/post/git/usegit/</link>
       <pubDate>Mon, 15 Dec 2025 00:00:00 &#43;0000</pubDate>
       <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/git/usegit/</guid>
+      <guid>http://localhost:33681/post/git/usegit/</guid>
       <description>
         <![CDATA[<h1>Git Cherry-Pick 使用指南</h1><p>作者：AKF（13935468012@163.com）</p>
         
@@ -146,7 +171,7 @@ Git Cherry-Pick 使用指南
 什么是 Cherry-Pick？
 </h2><p>Cherry-pick 是 Git 中一个强大的功能，它允许你从一个分支中选择特定的提交（commit），并将其应用到另一个分支上。这在需要将某些特定的修改从一个分支移植到另一个分支时非常有用。</p>
         
-        <hr><p>本文2025-12-15首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-15</p>]]>
+        <hr><p>本文2025-12-15首发于<a href='http://localhost:33681/'>鼠鼠的自我救赎</a>，最后修改于2025-12-15</p>]]>
       </description>
       
         <category>git</category>
@@ -157,10 +182,10 @@ Git Cherry-Pick 使用指南
 
     <item>
       <title>Go 实现 Docker 镜像自动推送到 AWS ECR</title>
-      <link>http://localhost:1313/post/sdktools/aws-ecr-push-tool/</link>
+      <link>http://localhost:33681/post/sdktools/aws-ecr-push-tool/</link>
       <pubDate>Sun, 14 Dec 2025 00:00:00 &#43;0000</pubDate>
       <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/sdktools/aws-ecr-push-tool/</guid>
+      <guid>http://localhost:33681/post/sdktools/aws-ecr-push-tool/</guid>
       <description>
         <![CDATA[<h1>Go 实现 Docker 镜像自动推送到 AWS ECR</h1><p>作者：AKF（13935468012@163.com）</p>
         
@@ -169,7 +194,7 @@ Git Cherry-Pick 使用指南
 背景
 </h2><p>在微服务架构中，我们经常需要将构建好的 Docker 镜像推送到容器镜像仓库。AWS ECR (Elastic Container Registry) 是 AWS 提供的托管式 Docker 镜像仓库服务。本文将介绍如何使用 Go 编写一个自动化工具，实现 Docker 镜像到 AWS ECR 的推送。</p>
         
-        <hr><p>本文2025-12-14首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-14</p>]]>
+        <hr><p>本文2025-12-14首发于<a href='http://localhost:33681/'>鼠鼠的自我救赎</a>，最后修改于2025-12-14</p>]]>
       </description>
       
         <category>云原生</category>
@@ -180,16 +205,16 @@ Git Cherry-Pick 使用指南
 
     <item>
       <title>Go Build Tag：条件编译的正确姿势</title>
-      <link>http://localhost:1313/post/golang/go-build-tag/</link>
+      <link>http://localhost:33681/post/golang/go-build-tag/</link>
       <pubDate>Sat, 13 Dec 2025 00:00:00 &#43;0000</pubDate>
       <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/golang/go-build-tag/</guid>
+      <guid>http://localhost:33681/post/golang/go-build-tag/</guid>
       <description>
         <![CDATA[<h1>Go Build Tag：条件编译的正确姿势</h1><p>作者：AKF（13935468012@163.com）</p>
         
           <p>Build Tag 是 Go 的条件编译机制，让你控制哪些文件参与编译。简单说就是给文件打个&quot;标签&quot;，编译时可以选择性地包含或排除这些文件。</p>
         
-        <hr><p>本文2025-12-13首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-13</p>]]>
+        <hr><p>本文2025-12-13首发于<a href='http://localhost:33681/'>鼠鼠的自我救赎</a>，最后修改于2025-12-13</p>]]>
       </description>
       
         <category>Golang后端踩坑</category>
@@ -200,10 +225,10 @@ Git Cherry-Pick 使用指南
 
     <item>
       <title>鉴权登录限制设置</title>
-      <link>http://localhost:1313/post/usefeat/go-zero-jwt-limiter/</link>
+      <link>http://localhost:33681/post/usefeat/go-zero-jwt-limiter/</link>
       <pubDate>Wed, 10 Dec 2025 00:00:00 &#43;0000</pubDate>
       <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/usefeat/go-zero-jwt-limiter/</guid>
+      <guid>http://localhost:33681/post/usefeat/go-zero-jwt-limiter/</guid>
       <description>
         <![CDATA[<h1>鉴权登录限制设置</h1><p>作者：AKF（13935468012@163.com）</p>
         
@@ -213,30 +238,10 @@ Git Cherry-Pick 使用指南
 </h2><p>在实际业务中，我们经常需要限制用户的同时登录设备数量。比如视频会员只允许同时在 2 台设备上登录，第 3 台设备登录时会把最早的那个踢下线。</p>
 <p>本文介绍如何在 Go-Zero 框架中实现这个功能。</p>
         
-        <hr><p>本文2025-12-10首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-10</p>]]>
+        <hr><p>本文2025-12-10首发于<a href='http://localhost:33681/'>鼠鼠的自我救赎</a>，最后修改于2025-12-10</p>]]>
       </description>
       
         <category>微服务</category><category>功能设计</category>
-      
-    </item>
-    
-    
-
-    <item>
-      <title>使用 modd 实现 Go 项目热加载</title>
-      <link>http://localhost:1313/post/study/modd%E7%83%AD%E5%8A%A0%E8%BD%BD/</link>
-      <pubDate>Sat, 06 Dec 2025 00:00:00 &#43;0000</pubDate>
-      <author>13935468012@163.com (AKF)</author>
-      <guid>http://localhost:1313/post/study/modd%E7%83%AD%E5%8A%A0%E8%BD%BD/</guid>
-      <description>
-        <![CDATA[<h1>使用 modd 实现 Go 项目热加载</h1><p>作者：AKF（13935468012@163.com）</p>
-        
-          <p>modd 是一个轻量级的文件监听工具，可以在代码变更时自动重新编译并重启服务，提升开发效率。</p>
-        
-        <hr><p>本文2025-12-06首发于<a href='http://localhost:1313/'>鼠鼠的自我救赎</a>，最后修改于2025-12-06</p>]]>
-      </description>
-      
-        <category>开发环境</category>
       
     </item>
     
