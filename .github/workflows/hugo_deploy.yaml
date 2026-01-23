@@ -35,7 +35,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         with:
           # 使用 GitHub 自动提供的 token（推荐用于跨仓库部署）
-          github_token: ${{ secrets.HUGO_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           # <username>替换成自己的用户名
           external_repository: akf66/akf66.github.io
           # 现在默认分支都用main，比如用的是master分支，则改为master
