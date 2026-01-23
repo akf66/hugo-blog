@@ -34,8 +34,8 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         if: github.ref == 'refs/heads/main'
         with:
-          # 使用 GitHub 自动提供的 token（推荐用于跨仓库部署）
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # HUGO_TOKEN就是上面Actions Secret取的名字，要与自己取的名字保持一致
+          personal_token: ${{ secrets.HUGO_TOKEN }}
           # <username>替换成自己的用户名
           external_repository: akf66/akf66.github.io
           # 现在默认分支都用main，比如用的是master分支，则改为master
