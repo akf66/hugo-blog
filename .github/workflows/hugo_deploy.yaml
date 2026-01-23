@@ -35,7 +35,6 @@ jobs:
         if: github.ref == 'refs/heads/main'
         with:
           # HUGO_TOKEN就是上面Actions Secret取的名字，要与自己取的名字保持一致
-          github_token: ${{ secrets.HUGO_TOKEN }}
           personal_token: ${{ secrets.HUGO_TOKEN }}
           # <username>替换成自己的用户名
           external_repository: akf66/akf66.github.io
