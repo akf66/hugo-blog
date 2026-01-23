@@ -146,7 +146,7 @@ Git Cherry-Pick 使用指南
           <h2 id="前言">
 <a class="header-anchor" href="#%e5%89%8d%e8%a8%80"></a>
 前言
-</h2><p>相比命令行操作，使用图形化 Git 工具进行 cherry-pick 更加直观和便捷。本文将通过实际截图演示如何使用图形化工具（如 GitKraken、SourceTree、VS Code Git Graph 等）完成 cherry-pick 操作。</p>
+</h2><p>相比命令行操作，使用图形化 Git 工具进行 cherry-pick 更加直观和便捷。本文将通过实际截图演示如何使用图形化工具（如 GitKraken、SourceTree、VS Code Git Graph 等）完成 cherry-pick 操作。1</p>
         
         <hr><p>本文2025-12-15首发于<a href='http://localhost:33681/'>鼠鼠的自我救赎</a>，最后修改于2025-12-15</p>]]>
       </description>

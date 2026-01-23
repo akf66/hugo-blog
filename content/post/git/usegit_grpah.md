@@ -11,7 +11,7 @@ categories:
 
 ## 前言
 
-相比命令行操作，使用图形化 Git 工具进行 cherry-pick 更加直观和便捷。本文将通过实际截图演示如何使用图形化工具（如 GitKraken、SourceTree、VS Code Git Graph 等）完成 cherry-pick 操作。
+相比命令行操作，使用图形化 Git 工具进行 cherry-pick 更加直观和便捷。本文将通过实际截图演示如何使用图形化工具（如 GitKraken、SourceTree、VS Code Git Graph 等）完成 cherry-pick 操作。1
 
 ## 使用场景
 
