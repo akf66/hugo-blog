@@ -5,8 +5,8 @@
     {{- $css = $css | minify | fingerprint -}}
   {{- end -}}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}" />
-  {{- /* 总专栏汇总所有子专栏的文章，子专栏只列自己的文章 */ -}}
-  {{- $pages := .RegularPagesRecursive.ByDate.Reverse -}}
+  {{- /* 只列当前栏目下的文章：总专栏只显示子专栏卡片，文章需进入子专栏查看 */ -}}
+  {{- $pages := .RegularPages.ByDate.Reverse -}}
   {{- $pageSize := 0 -}}
   {{- with $.Site.Params.paginate.post -}}
     {{- $pageSize = . -}}
@@ -54,5 +54,7 @@
   {{- range $k, $v := $paginator.Pages -}}
     {{- partial "post.html" (dict "index" $k "ctx" . "page" $v) -}}
   {{- end -}}
-  {{- partial "pagination.html" . -}}
+  {{- if $paginator.Pages -}}
+    {{- partial "pagination.html" . -}}
+  {{- end -}}
 {{- end -}}
