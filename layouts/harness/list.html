@@ -1,7 +1,12 @@
 {{- define "main" -}}
   {{- $ctx := . -}}
-  {{- /* 总专栏汇总所有子专栏的文章，子专栏只列自己的文章 */ -}}
-  {{- $pages := .RegularPagesRecursive.ByDate.Reverse -}}
+  {{- $css := resources.Get "css/harness.scss" | toCSS (dict "targetPath" "css/harness.css") -}}
+  {{- if hugo.IsProduction -}}
+    {{- $css = $css | minify | fingerprint -}}
+  {{- end -}}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" />
+  {{- /* 只列当前栏目下的文章：总专栏只显示子专栏卡片，文章需进入子专栏查看 */ -}}
+  {{- $pages := .RegularPages.ByDate.Reverse -}}
   {{- $pageSize := 0 -}}
   {{- with $.Site.Params.paginate.post -}}
     {{- $pageSize = . -}}
@@ -14,7 +19,7 @@
   {{- end -}}
   {{- if eq 1 $paginator.PageNumber -}}
     {{- if or .Content (ne .Parent.Type "harness") -}}
-      <article class="article" data-aos="{{ .Site.Params.animation.options.home.post }}">
+      <article class="article harness-intro" data-aos="{{ .Site.Params.animation.options.home.post }}">
         <div class="article-inner">
           <div class="article-entry" itemprop="articleBody">
             {{- if eq .Parent.Type "harness" -}}
@@ -30,9 +35,14 @@
         {{- range . -}}
           <div class="post-categories-wrap">
             <a class="post-link" href="{{ .RelPermalink }}" aria-label="{{ .Title }}" title="{{ .Title }}"></a>
-            <div class="post-categories-cover">
-              {{- $cover := .Params.cover | default (partial "helpers/randomCover.html" $ctx) | default $ctx.Site.Params.banner -}}
-              <img data-src="{{ $cover | relURL }}" data-sizes="auto" alt="{{ .Title }}" class="lazyload" />
+            {{- if .Params.icon -}}
+              <div class="post-categories-cover harness-cover" style="background: {{ .Params.color | default "#222" | safeCSS }}">
+                <span class="harness-icon"><img src="{{ .Params.icon | relURL }}" alt="{{ .Title }}" /></span>
+            {{- else -}}
+              <div class="post-categories-cover">
+                {{- $cover := .Params.cover | default (partial "helpers/randomCover.html" $ctx) | default $ctx.Site.Params.banner -}}
+                <img data-src="{{ $cover | relURL }}" data-sizes="auto" alt="{{ .Title }}" class="lazyload" />
+            {{- end -}}
               <h2>{{ .Title }}</h2>
               <h3>{{ i18n "home_categories.count" (len .RegularPagesRecursive) }}</h3>
             </div>
@@ -44,5 +54,7 @@
   {{- range $k, $v := $paginator.Pages -}}
     {{- partial "post.html" (dict "index" $k "ctx" . "page" $v) -}}
   {{- end -}}
-  {{- partial "pagination.html" . -}}
+  {{- if $paginator.Pages -}}
+    {{- partial "pagination.html" . -}}
+  {{- end -}}
 {{- end -}}
