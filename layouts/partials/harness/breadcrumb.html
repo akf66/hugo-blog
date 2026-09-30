@@ -1,0 +1,9 @@
+{{- /* Harness 专栏面包屑：Harness 设计 / 子专栏 / 当前页 */ -}}
+<p class="harness-breadcrumb">
+  {{- range .Ancestors.Reverse -}}
+    {{- if not .IsHome -}}
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a> /
+    {{ end -}}
+  {{- end -}}
+  {{- .Title -}}
+</p>

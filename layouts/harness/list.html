@@ -18,7 +18,7 @@
         <div class="article-inner">
           <div class="article-entry" itemprop="articleBody">
             {{- if eq .Parent.Type "harness" -}}
-              <p><a href="{{ .Parent.RelPermalink }}">{{ .Parent.Title }}</a> / {{ .Title }}</p>
+              {{- partial "harness/breadcrumb.html" . -}}
             {{- end -}}
             {{- .Content -}}
           </div>

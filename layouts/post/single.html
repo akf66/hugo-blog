@@ -1,0 +1,12 @@
+{{- define "main" -}}
+  {{- if eq .Section "harness" -}}
+    <article class="article" data-aos="{{ .Site.Params.animation.options.article.whole }}">
+      <div class="article-inner">
+        <div class="article-entry">
+          {{- partial "harness/breadcrumb.html" . -}}
+        </div>
+      </div>
+    </article>
+  {{- end -}}
+  {{- partial "article.html" . -}}
+{{- end -}}
