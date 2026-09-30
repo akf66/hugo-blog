@@ -35,9 +35,14 @@
         {{- range . -}}
           <div class="post-categories-wrap">
             <a class="post-link" href="{{ .RelPermalink }}" aria-label="{{ .Title }}" title="{{ .Title }}"></a>
-            <div class="post-categories-cover">
-              {{- $cover := .Params.cover | default (partial "helpers/randomCover.html" $ctx) | default $ctx.Site.Params.banner -}}
-              <img data-src="{{ $cover | relURL }}" data-sizes="auto" alt="{{ .Title }}" class="lazyload" />
+            {{- if .Params.icon -}}
+              <div class="post-categories-cover harness-cover" style="background: {{ .Params.color | default "#222" | safeCSS }}">
+                <span class="harness-icon"><img src="{{ .Params.icon | relURL }}" alt="{{ .Title }}" /></span>
+            {{- else -}}
+              <div class="post-categories-cover">
+                {{- $cover := .Params.cover | default (partial "helpers/randomCover.html" $ctx) | default $ctx.Site.Params.banner -}}
+                <img data-src="{{ $cover | relURL }}" data-sizes="auto" alt="{{ .Title }}" class="lazyload" />
+            {{- end -}}
               <h2>{{ .Title }}</h2>
               <h3>{{ i18n "home_categories.count" (len .RegularPagesRecursive) }}</h3>
             </div>
