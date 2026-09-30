@@ -11,6 +11,9 @@ menu:
   - name: archives
     url: "archives"
     icon:
+  - name: harness
+    url: "harness"
+    icon:
   - name: about
     url: "about"
     icon:

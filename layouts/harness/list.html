@@ -1,0 +1,26 @@
+{{- define "main" -}}
+  {{- $pages := .Pages.ByDate.Reverse -}}
+  {{- $pageSize := 0 -}}
+  {{- with $.Site.Params.paginate.post -}}
+    {{- $pageSize = . -}}
+  {{- end -}}
+  {{- $paginator := "" -}}
+  {{- if gt $pageSize 0 -}}
+    {{- $paginator = .Paginate $pages $pageSize -}}
+  {{- else -}}
+    {{- $paginator = .Paginate $pages -}}
+  {{- end -}}
+  {{- if and (eq 1 $paginator.PageNumber) .Content -}}
+    <article class="article" data-aos="{{ .Site.Params.animation.options.home.post }}">
+      <div class="article-inner">
+        <div class="article-entry" itemprop="articleBody">
+          {{- .Content -}}
+        </div>
+      </div>
+    </article>
+  {{- end -}}
+  {{- range $k, $v := $paginator.Pages -}}
+    {{- partial "post.html" (dict "index" $k "ctx" . "page" $v) -}}
+  {{- end -}}
+  {{- partial "pagination.html" . -}}
+{{- end -}}
