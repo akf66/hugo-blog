@@ -1,6 +1,11 @@
 {{- define "main" -}}
   {{- if eq .Section "harness" -}}
-    <article class="article" data-aos="{{ .Site.Params.animation.options.article.whole }}">
+    {{- $css := resources.Get "css/harness.scss" | toCSS (dict "targetPath" "css/harness.css") -}}
+    {{- if hugo.IsProduction -}}
+      {{- $css = $css | minify | fingerprint -}}
+    {{- end -}}
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}" />
+    <article class="article harness-intro" data-aos="{{ .Site.Params.animation.options.article.whole }}">
       <div class="article-inner">
         <div class="article-entry">
           {{- partial "harness/breadcrumb.html" . -}}

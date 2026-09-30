@@ -1,0 +1,20 @@
+// 主题只在 home_categories.enable 时打包卡片样式，这里为 Harness 专栏单独引入
+// 变量值与 themes/reimu/assets/css/_variables.scss 保持一致
+$mq-normal: "screen and (min-width: 768px)";
+$mg-normal: "screen and (max-width: 767px)";
+$post-radius: 10px;
+
+@import "partials/home-categories";
+
+.harness-intro {
+  margin-bottom: 32px;
+
+  @media #{$mg-normal} {
+    margin-bottom: 20px;
+  }
+}
+
+// 去掉主题给正文链接追加的外链图标
+.article-entry .harness-breadcrumb a::after {
+  content: none !important;
+}
