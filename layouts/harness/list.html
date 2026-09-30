@@ -1,0 +1,48 @@
+{{- define "main" -}}
+  {{- $ctx := . -}}
+  {{- /* 总专栏汇总所有子专栏的文章，子专栏只列自己的文章 */ -}}
+  {{- $pages := .RegularPagesRecursive.ByDate.Reverse -}}
+  {{- $pageSize := 0 -}}
+  {{- with $.Site.Params.paginate.post -}}
+    {{- $pageSize = . -}}
+  {{- end -}}
+  {{- $paginator := "" -}}
+  {{- if gt $pageSize 0 -}}
+    {{- $paginator = .Paginate $pages $pageSize -}}
+  {{- else -}}
+    {{- $paginator = .Paginate $pages -}}
+  {{- end -}}
+  {{- if eq 1 $paginator.PageNumber -}}
+    {{- if or .Content (ne .Parent.Type "harness") -}}
+      <article class="article" data-aos="{{ .Site.Params.animation.options.home.post }}">
+        <div class="article-inner">
+          <div class="article-entry" itemprop="articleBody">
+            {{- if eq .Parent.Type "harness" -}}
+              {{- partial "harness/breadcrumb.html" . -}}
+            {{- end -}}
+            {{- .Content -}}
+          </div>
+        </div>
+      </article>
+    {{- end -}}
+    {{- with .Sections.ByWeight -}}
+      <div class="post-categories-wrapper" data-aos="{{ $ctx.Site.Params.animation.options.home.post }}">
+        {{- range . -}}
+          <div class="post-categories-wrap">
+            <a class="post-link" href="{{ .RelPermalink }}" aria-label="{{ .Title }}" title="{{ .Title }}"></a>
+            <div class="post-categories-cover">
+              {{- $cover := .Params.cover | default (partial "helpers/randomCover.html" $ctx) | default $ctx.Site.Params.banner -}}
+              <img data-src="{{ $cover | relURL }}" data-sizes="auto" alt="{{ .Title }}" class="lazyload" />
+              <h2>{{ .Title }}</h2>
+              <h3>{{ i18n "home_categories.count" (len .RegularPagesRecursive) }}</h3>
+            </div>
+          </div>
+        {{- end -}}
+      </div>
+    {{- end -}}
+  {{- end -}}
+  {{- range $k, $v := $paginator.Pages -}}
+    {{- partial "post.html" (dict "index" $k "ctx" . "page" $v) -}}
+  {{- end -}}
+  {{- partial "pagination.html" . -}}
+{{- end -}}
