@@ -17,9 +17,6 @@ menu:
   - name: about
     url: "about"
     icon:
-  - name: friend
-    url: "friend"
-    icon:
 
 mainSections: ["post"]
 # 年，月，日及时间的格式化样式
