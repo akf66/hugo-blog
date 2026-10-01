@@ -64,10 +64,29 @@ $post-radius: 10px;
   }
 }
 
-// 主题在暗色模式下会给所有图片加 brightness(70%)，架构图会变得发灰看不清，这里对专栏配图取消
-[data-theme="dark"] .article-entry img[src^="/images/harness/"] {
+// 主题在暗色模式下会给所有图片加 brightness(70%)，架构图会变得发灰看不清，这里对专栏配图取消。
+// 主题的懒加载脚本会把 src 改写成带域名的绝对地址并放进 data-src，所以用包含匹配，不用前缀匹配。
+[data-theme="dark"] .article-entry img[src*="/images/harness/"],
+[data-theme="dark"] .article-entry img[data-src*="/images/harness/"] {
   filter: none !important;
   animation: none !important;
   opacity: 1 !important;
   border-radius: 8px;
+}
+
+// 主题让表格按内容撑宽（width: max-content），单元格不换行，长表格只能横向滚动。
+// 专栏文章的表格以说明文字为主，这里改回占满正文宽度、单元格自动换行。
+.article-entry div.table-wrapper table {
+  width: 100%;
+}
+
+.article-entry table td,
+.article-entry table th {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.article-entry table td code {
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
