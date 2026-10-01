@@ -1,22 +1,19 @@
 ---
 title: "Pi 源码分析 01 · 开篇：Pi 是什么，以及它的骨架"
 date: 2026-10-01T10:00:00+08:00
-description: "基于 earendil-works/pi v0.99.2 重写的开篇：三重身份、四层堆栈、依赖规则、一次 prompt 的旅程，以及三个月来的架构演变。"
+description: "基于 earendil-works/pi v0.99.2 的开篇：三重身份、四层堆栈、依赖规则、一次 prompt 的旅程，以及定制方式。"
 tags:
   - Harness
   - Pi
   - 源码分析
 ---
 
-> **版本基线**：`earendil-works/pi` v0.99.2（2026-09-30），commit `8ce69e9d2`。
-> 本章是对 [dgzhuya.com 第 1 章](https://www.dgzhuya.com/modules/ch01-overview)（基于 v0.80.2）的重写。保留它"工具 / 教材 / SDK"三重视角的好框架，但所有架构、数字和代码都按最新源码重新核对。三个月里 Pi 从 4 个包长到了 14 个目录，第一章的"骨架图"已经需要重画。
+> **版本基线**：`earendil-works/pi` v0.99.2（2026-09-30），commit `8ce69e9d2`。文中所有架构、数字和代码均以该版本源码为准。
 
-本章不深入实现细节，只回答三个问题：
+本章不深入实现细节，只回答两个问题：
 
 1. **Pi 是什么？**——一句话定义与三重身份
-2. **Pi 的骨架长什么样？**——分层、依赖规则、一次请求怎么穿过各层
-3. **和三个月前比，变了什么？**——哪些结论仍成立，哪些已经过时
-
+2. **Pi 的骨架长什么样？**——分层、依赖规则、一次请求怎么穿过各层、怎么定制
 
 <!--more-->
 
@@ -29,7 +26,6 @@ tags:
 | 源码位置 | 本文所有路径都相对于仓库根目录，如 `packages/agent/src/agent-loop.ts` |
 | 行号 | 只在必要时给出；行号会随版本漂移，**以符号名为主、行号为辅** |
 | 标记 `*` | 表示实验性包，README 明确写了"API 随时变化" |
-| 对照原博客 | 第 9 节给出了数字对照表，附录给出了勘误清单 |
 
 ---
 
@@ -64,7 +60,7 @@ Pi 的 14 个包目录（13 个可发布的 npm 包，外加私有的 `pi-evals`
 | **L1 模型层** | `@earendil-works/pi-ai` | 统一的 LLM API：42 个供应商、10 种线协议、流式事件、token 与成本 | 不知道什么是 Agent |
 | **L0 基础层** | `pi-telemetry`、`chord` | 厂商中立的遥测契约；上下文与取消、服务、复制状态 | 不知道什么是 LLM |
 
-> 💡 原博客说 Pi 是"三层堆栈 + 一个 UI 库"。这个说法**对 L1–L3 仍然成立**，只是现在下面多垫了一层基础设施（L0）。日常阅读源码时，L0 几乎可以忽略：agent-core 主要通过 `chord/context` 传递取消信号和遥测父 span。
+> 💡 读源码时，L0 几乎可以忽略：agent-core 主要通过 `chord/context` 传递取消信号和遥测父 span。真正的主线是 L1 → L2 → L3 这三层。
 
 ### 2.2 能力库：零内部依赖、可单独复用
 
@@ -76,7 +72,7 @@ Pi 的 14 个包目录（13 个可发布的 npm 包，外加私有的 `pi-evals`
 
 它们的共同点是 `package.json` 里没有任何 `@earendil-works/*` 依赖。这是 Pi 最容易"拆下来就用"的部分。
 
-### 2.3 实验区：Pi 正在长出来的新方向
+### 2.3 实验区：Pi 正在探索的方向
 
 | 包 | 方向 |
 |---|---|
@@ -101,11 +97,11 @@ Pi 的 14 个包目录（13 个可发布的 npm 包，外加私有的 `pi-evals`
 **规则 2：类型逐层"加料"，下层类型从不为上层修改。**
 
 - `pi-ai` 定义最基础的类型：`Message`、`Model`、`Tool`（只有 schema，没有 `execute`，因为 LLM 不需要知道工具怎么执行）。
-- `pi-agent-core` 在此基础上加入 `AgentTool`（带 `execute`）、`AgentMessage`（可以通过声明合并扩展自定义消息）。
+- `pi-agent-core` 在此基础上加入 `AgentTool`（带 `execute`）、`AgentMessage`（可以通过 `CustomAgentMessages` 声明合并扩展自定义消息）。
 - `pi-coding-agent` 再加入 `ToolDefinition`（带 TUI 渲染）、`BashExecutionMessage`、`CompactionSummaryMessage` 等业务类型。
 
 **规则 3：叶子包零依赖。**
-`chord`、`pi-telemetry`、`pi-tui`、`pi-mcp`、`pi-codemode` 都没有内部依赖。新能力（MCP、codemode）先做成独立的叶子包，再由 L3 以"内置扩展"的形式接进来，而不是直接写进引擎。
+`chord`、`pi-telemetry`、`pi-tui`、`pi-mcp`、`pi-codemode` 都没有内部依赖。像 MCP、codemode 这样的能力，先做成独立的叶子包，再由 L3 以"内置扩展"的形式接进来，而不是直接写进引擎。
 
 > 🧠 **思考题**：为什么 MCP 不放进 `pi-agent-core`？
 > 因为对引擎来说，MCP 工具和 `read` 工具没有区别，都只是一个 `AgentTool`。把 MCP 放在 L3 的扩展里，引擎就能保持"不知道工具从哪来"。想用别的 MCP 实现，替换扩展就行，不用 fork 引擎。
@@ -124,9 +120,9 @@ Pi 的 14 个包目录（13 个可发布的 npm 包，外加私有的 `pi-evals`
 | `KnownProvider`（42 个） | **供应商**：anthropic、openai、google、deepseek、openrouter、zai、moonshotai、xiaomi…… 多个供应商可以共用一种协议 | 同上 |
 | `Models` 集合 | 注册供应商、查模型、发请求的入口：`createModels()` / `builtinModels()` | `packages/ai/src/models.ts` |
 | 模型类型 | 除了 `chat`，还有 `image`（生图）和 `classifier`（分类） | `types.ts` 中的 `ModelTypeMap` |
-| `/compat` 入口 | 旧的全局 API（`getModel` / `stream`），README 标注为"临时兼容，未来移除" | `packages/ai/src/compat.ts` |
+| `/compat` 入口 | 旧的全局 API（`getModel` / `stream`），README 标注为"临时兼容，未来移除"，新代码不要用 | `packages/ai/src/compat.ts` |
 
-**最小示例**（摘自 `packages/ai/README.md`，当前推荐写法）：
+**最小示例**（摘自 `packages/ai/README.md`）：
 
 ```typescript
 import type { Context } from "@earendil-works/pi-ai";
@@ -147,15 +143,13 @@ for await (const event of s) {
 const finalMessage = await s.result();
 ```
 
-> 📌 和原博客的区别：原文从 `pi-ai/compat` 导入 `getModel`，那是旧 API。新代码请用 `Models` 集合。
-
 ### 4.2 L2 · pi-agent-core：只管跑循环
 
 **职责**：实现"模型思考 → 调工具 → 看结果 → 再思考"这个循环。它对"编码"一无所知，可以拿来做客服 Agent、数据分析 Agent 等任何场景。
 
 | 组件 | 要点 |
 |---|---|
-| `Agent` 类（`agent.ts`） | 持有状态（系统提示词、模型、消息、工具）。方法有 `prompt` / `continue` / `steer` / `followUp` / `abort` / `subscribe` / `waitForIdle` |
+| `Agent` 类（`agent.ts`） | 持有状态（系统提示词、模型、消息、工具），在构造参数 `initialState` 里传入。方法有 `prompt` / `continue` / `steer` / `followUp` / `abort` / `subscribe` / `waitForIdle` |
 | `agentLoop`（`agent-loop.ts`，约 940 行） | **双层循环**。内层：有工具调用或插队消息（steering）就继续下一轮。外层：内层结束后检查后续消息（follow-up），有就再来 |
 | 钩子 | `beforeToolCall` / `afterToolCall` / `transformContext` / `convertToLlm` / `prepareRequest` / `finishTurn` 等，上层通过它们注入业务逻辑 |
 | `AgentEvent`（10 种） | `agent_start/end` · `turn_start/end` · `message_start/update/end` · `tool_execution_start/update/end` |
@@ -186,8 +180,6 @@ agent.subscribe((event) => {
 await agent.prompt("Hello!");
 ```
 
-> 📌 和原博客的区别：原文写"model/tools/systemPrompt 在调用 prompt() 时传入"。实际上它们放在构造参数 `initialState` 里（运行中也可以改 `agent.state`）。
-
 ### 4.3 L3 · pi-coding-agent：把引擎装成产品
 
 **职责**：在 `Agent` 外面包一层 `AgentSession`。它负责组装系统提示词和上下文文件、注册内置工具、加载扩展和资源、把会话落盘成 JSONL 树、自动压缩与重试，并把事件扩展成 `AgentSessionEvent` 广播给各种前端。
@@ -200,7 +192,7 @@ await agent.prompt("Hello!");
 | 扩展 | `extensions/`（运行时、类型、事件派发）；内置扩展在 `src/extensions/` |
 | 会话存储 | `session-manager.ts`（JSONL 树、分叉、分支摘要） |
 | 提示词 | `system-prompt.ts`、`resource-loader.ts`（AGENTS.md、SYSTEM.md、Skills、模板） |
-| 模型 | `model-runtime.ts`、`model-registry.ts`（内置目录 + `models.json` + 认证） |
+| 模型 | `model-runtime.ts`、`model-registry.ts`、`model-config.ts`（内置目录 + `models.json` + 认证） |
 
 **最小示例**（摘自 `docs/sdk.md` 与 `examples/sdk/02-custom-model.ts`）：
 
@@ -220,21 +212,17 @@ try {
 }
 ```
 
-> 📌 和原博客的区别有两点：
-> - `createAgentSession()` 返回的是 `{ session, extensionsResult, ... }`，不是 session 本身。
-> - 模型通过 `ModelRuntime` 获取。
->
-> 另外，**SDK 会话不会自动加载内置扩展**。要用 MCP，需要自己加 `createMcpExtension()`。
+> 📌 两个容易踩的点：
+> - `createAgentSession()` 返回的是 `{ session, extensionsResult, ... }`，需要解构。
+> - **SDK 会话不会自动加载内置扩展**。要用 MCP，需要自己加 `createMcpExtension()`。
 
 ### 4.4 侧库 · pi-tui：与 Agent 无关的终端 UI
 
-pi-tui 不在堆栈链上。只有交互模式用它，它本身也不认识任何 `pi-*` 包，所以任何 Node.js 终端程序都能用。三个月里它从约 1.2 万行长到约 1.9 万行，新增的主要是：
+pi-tui 不在堆栈链上：只有交互模式用它，它本身也不认识任何 `pi-*` 包，任何 Node.js 终端程序都能用。核心能力：
 
-- 全屏（alt-screen）渲染器 `TuiAltScreen`，可以在常规模式和全屏模式之间切换
-- 终端里的 Mermaid 与 LaTeX 渲染
-- 鼠标滚轮加速、搜索、可拖拽的滚动条
-
-核心 `tui.ts` 反而从 1714 行瘦身到 1493 行，因为代码拆到了 `tui-main-screen.ts` 和 `tui-alt-screen.ts` 两个渲染器里。
+- **差分渲染**：只重绘变化的部分，配合同步输出（CSI 2026）避免闪烁
+- **两种渲染器**：常规模式 `TuiMainScreen` 和全屏模式 `TuiAltScreen`，运行时可以切换
+- **组件**：`Editor`、`Markdown`（支持 Mermaid 与 LaTeX）、`SelectList`、`SettingsList`、`ScrollView` 等
 
 ---
 
@@ -256,12 +244,12 @@ pi-tui 不在堆栈链上。只有交互模式用它，它本身也不认识任�
 
 这张表是读懂后续章节的地图：
 
-- 第 3 章讲 ③⑦ 的循环
-- 第 4 章讲 ④⑥
-- 第 5 章讲 ⑦ 的工具执行
-- 第 6、8 章讲 ② 的上下文
-- 第 7 章讲 ⑨ 的事件
-- 第 9、10 章讲 ⑧
+- Agent Loop 章节讲 ③⑦ 的循环
+- 模型调用章节讲 ④⑥
+- 工具系统章节讲 ⑦ 的工具执行
+- 消息系统与上下文工程章节讲 ②
+- 事件驱动章节讲 ⑨
+- 压缩与会话管理章节讲 ⑧
 
 ---
 
@@ -273,11 +261,11 @@ pi-tui 不在堆栈链上。只有交互模式用它，它本身也不认识任�
 |---|---|---|
 | `read` / `bash` / `edit` / `write` | ✅ | `DEFAULT_TOOL_NAMES`，见 `settings-manager.ts` |
 | `grep` / `find` / `ls` | ❌ | 需要时通过 `--tools` 或 `defaultTools` 开启 |
-| `powershell` | ❌ | v0.80.2 之后新增，仅限原生 Windows，例如 `"defaultTools": ["-bash", "+powershell"]` |
+| `powershell` | ❌ | 仅限原生 Windows，例如 `"defaultTools": ["-bash", "+powershell"]` |
 
-`defaultTools` 现在支持 `+name` / `-name` 增量写法，可以只增删个别工具，不用把默认列表整个重写一遍。
+`defaultTools` 支持 `+name` / `-name` 增量写法，可以只增删个别工具，不用把默认列表整个重写一遍。
 
-### 6.2 内置扩展（v0.99.0 起）
+### 6.2 内置扩展
 
 | 扩展 | 作用 | 默认状态 |
 |---|---|---|
@@ -293,7 +281,7 @@ pi-tui 不在堆栈链上。只有交互模式用它，它本身也不认识任�
 | 模式 | 启动方式 | 用途 |
 |---|---|---|
 | 交互 | `pi`（可加 `--tui-mode fullscreen`） | 日常编码 |
-| Print / JSON | `pi -p "..."`、`--mode json` | 脚本、CI；JSON 模式逐行输出事件（v0.84 起 `message_update` 只发增量） |
+| Print / JSON | `pi -p "..."`、`--mode json` | 脚本、CI；JSON 模式逐行输出事件，`message_update` 只携带增量 |
 | RPC | `--mode rpc` | 通过 stdin/stdout 交换 JSONL，接入非 Node 程序 |
 | SDK | `createAgentSession()` | 嵌入到你自己的 Node 应用 |
 
@@ -315,15 +303,15 @@ pi-tui 不在堆栈链上。只有交互模式用它，它本身也不认识任�
 └── settings.json  mcp.json  SYSTEM.md  extensions/  skills/  prompts/  themes/
 ```
 
-上下文文件：每个目录只取下面几个中的第一个匹配项：`AGENTS.override.md` → `AGENTS.md` → `CLAUDE.md`。`AGENTS.override.md` 是 v0.84 新增的。
+上下文文件：每个目录只取下面几个中的第一个匹配项：`AGENTS.override.md` → `AGENTS.md` → `CLAUDE.md`。
 
 ---
 
 ## 7 · 定制阶梯：从"用 Pi"到"造自己的 Agent"
 
-![图 5 · 定制阶梯](/images/harness/pi/ch01/fig5-levers.png)
+![图 4 · 定制阶梯](/images/harness/pi/ch01/fig4-levers.png)
 
-原博客把定制手段总结为"五根杠杆"（扩展、技能、提示词模板、主题、Pi 包）。这里换一个角度，**按定制深度排成阶梯**，并把 SDK 也放进来：
+Pi 的定制手段可以**按深度排成阶梯**：
 
 | 级 | 手段 | 你写的是 | 典型用途 |
 |---|---|---|---|
@@ -333,52 +321,46 @@ pi-tui 不在堆栈链上。只有交互模式用它，它本身也不认识任�
 | ④ | Pi Packages | npm / git 包 | 把 ①–③ 打包：`pi install npm:@foo/bar` |
 | ⑤ | SDK | 你的应用代码 | 按需选层：L3 `createAgentSession`、L2 `Agent`、L1 `createModels` |
 
-两点需要更正：
+两点补充：
 
-- **热重载需要手动触发**：改完扩展后执行 `/reload`，不用重启会话，但它不会监听文件自动生效。会自动监听文件变化的只有主题。
-- **官方示例更多了**：`examples/extensions/` 下现在有 70 个顶层示例和 9 个子目录，包括 `subagent/`、`plan-mode/`、`sandbox/`、`permission-gate.ts`、`todo.ts`、`ssh.ts`。
-
----
-
-## 8 · 减法哲学的演变：Pi 不做什么
-
-原博客引用了官网的 "What we didn't build" 清单。三个月后，这张表需要加一列"现状"：
-
-| 原本不做的 | 当时的理由 | **v0.99.2 现状** |
-|---|---|---|
-| MCP 支持 | MCP 会一次性把大量工具描述灌进上下文 | ⚠️ **已内置**（`builtin:mcp`），但用两个机制规避原问题：工具默认通过 `codemode` 暴露，或用 `tool_search` 延迟声明，不再一次性灌入上下文。可以关掉 |
-| 子 Agent | 增加复杂度，降低可观察性 | 核心仍然没有；有 `examples/extensions/subagent/`；实验性的 `pi-durable` 提供了子 Agent 和子任务 |
-| 权限弹窗 | 弹窗疲劳，沦为"安全表演" | 核心仍然默认 YOLO；有 `permission-gate.ts`、`sandbox/` 示例，还有项目信任机制（project trust） |
-| 计划模式 | 写到 plan.md 更持久 | 核心仍然没有；有 `examples/extensions/plan-mode/` |
-| 后台 bash | tmux 已经解决了 | 不变 |
-| 内置待办 | TODO.md 更灵活 | 核心仍然没有；有 `examples/extensions/todo.ts` |
-
-**结论**："减法"没有被放弃，但做法从"不做"演进成了"**做成可关闭、可替换的内置扩展**"。
-
-- 引擎（L2）依然保持干净，MCP 只是 L3 的一个扩展。
-- 默认配置变得更"开箱即用"。
-- 判断 Pi 哲学的标准不再是"有没有某功能"，而是"这个功能是不是焊死的"。
+- **重载方式**：改完扩展、Skill 或提示词后执行 `/reload` 即可生效，不用重启会话。主题文件会被自动监听。
+- **官方示例**：`examples/extensions/` 下有 70 个顶层示例和 9 个子目录，包括 `subagent/`、`plan-mode/`、`sandbox/`、`permission-gate.ts`、`todo.ts`、`ssh.ts`，是写扩展最好的参考。
 
 ---
 
-## 9 · 三个月发生了什么
+## 8 · 减法哲学：核心不做什么，以及怎么补
 
-![图 4 · 版本时间线](/images/harness/pi/ch01/fig4-timeline.png)
+Pi 的核心刻意保持很小。下面这些常见能力，核心要么不做，要么做成可以关掉、可以替换的扩展：
 
-| 指标 | v0.80.2（原博客） | **v0.99.2（本文）** |
+| 能力 | 核心的态度 | 需要时怎么补 |
 |---|---|---|
-| 包目录数 | 4 | **14**（13 个可发布 + 私有 evals） |
-| 默认工具 | read · write · edit · bash | 不变 |
-| 全部内置工具 | 7 | **8**（+ powershell） |
-| 内置扩展 | 无 | **4**（mcp、codemode、tool-search、llama.cpp） |
-| `KnownProvider` | 35 | **42** |
-| 线协议 `KnownApi` | —— | 10 |
-| 模型类型 | chat | **chat · image · classifier** |
-| `agent-loop.ts` | 748 行 | 940 行 |
-| pi-tui 源码 | 约 12,100 行 | **约 19,200 行** |
-| `system-prompt.ts` | 173 行 | 216 行；静态模板约 200 个英文词，原博客写的是 90 词 |
-| 运行模式 | 4 | 4（远程 server 模式仍是实验性，不对外发布） |
-| `examples/extensions` | 77 项 | 80 项（70 个 `.ts` + 9 个目录 + README） |
+| MCP | 做成内置扩展 `builtin:mcp`，可以关闭。工具默认通过 `codemode` 暴露，或用 `tool_search` 延迟声明，避免一次性把大量工具描述灌进上下文 | 不需要时 `-builtin:mcp`；也可以换成第三方 MCP 扩展 |
+| 子 Agent | 核心没有 | `examples/extensions/subagent/`；实验性的 `pi-durable` 提供子 Agent 与子任务 |
+| 权限审批 | 核心默认不弹窗（YOLO） | `permission-gate.ts`、`sandbox/` 示例；项目级配置需要先信任项目才会加载 |
+| 计划模式 | 核心没有 | `examples/extensions/plan-mode/`，或者直接写 plan.md |
+| 后台 bash | 核心没有 | 用 tmux |
+| 待办清单 | 核心没有 | `examples/extensions/todo.ts`，或者用 TODO.md |
+
+背后的逻辑是：**引擎（L2）保持干净，产品层（L3）的能力都是可以拆下来的模块**。评价 Pi 的标准不是"有没有某个功能"，而是"这个功能是不是焊死的"。
+
+---
+
+## 9 · 关键数字（v0.99.2）
+
+| 指标 | 数值 |
+|---|---|
+| 包目录 | 14 个（13 个可发布 npm 包 + 私有 evals） |
+| 内置工具 | 8 个，默认启用 4 个（read · bash · edit · write） |
+| 内置扩展 | 4 个（mcp · codemode · tool-search · llama.cpp） |
+| 供应商 `KnownProvider` | 42 个 |
+| 线协议 `KnownApi` | 10 种 |
+| 模型类型 | chat · image · classifier |
+| `agent-loop.ts` | 约 940 行 |
+| `agent-session.ts` | 约 4300 行 |
+| pi-tui 源码 | 约 1.9 万行 |
+| 系统提示词静态模板 | 约 200 个英文词（运行时再拼接工具说明、上下文文件、Skills） |
+| 运行模式 | 4 种（交互 · Print/JSON · RPC · SDK） |
+| 官方扩展示例 | 70 个顶层 `.ts` + 9 个子目录 |
 
 ---
 
@@ -388,7 +370,7 @@ pi-tui 不在堆栈链上。只有交互模式用它，它本身也不认识任�
 |---|---|---|
 | **线协议（Api）** | 与 LLM 通信的请求/响应格式，如 `anthropic-messages` | 供应商：多个供应商可以共用一种协议 |
 | **供应商（Provider）** | 提供模型和认证的一方，如 `deepseek`、`openrouter` | —— |
-| **Models 集合** | pi-ai 中注册供应商、查找模型、发起请求的对象 | 旧的 `/compat` 全局函数 |
+| **Models 集合** | pi-ai 中注册供应商、查找模型、发起请求的对象 | `/compat` 里的旧全局函数 |
 | **ModelRuntime** | coding-agent 中的模型运行时：内置目录 + `models.json` + 凭据 | pi-ai 的 `Models` |
 | **Agent** | L2 的通用 Agent 实例：状态 + 循环 + 事件 | AgentSession |
 | **AgentSession** | L3 对 Agent 的封装：提示词、工具、扩展、会话持久化 | Agent |
@@ -403,9 +385,7 @@ pi-tui 不在堆栈链上。只有交互模式用它，它本身也不认识任�
 
 ---
 
-## 11 · 源码导航与后续路线
-
-**按"想搞懂什么"找文件：**
+## 11 · 源码导航
 
 | 想搞懂 | 从这里读 |
 |---|---|
@@ -418,7 +398,7 @@ pi-tui 不在堆栈链上。只有交互模式用它，它本身也不认识任�
 | MCP 怎么接入 | `packages/coding-agent/src/extensions/mcp/`；`packages/mcp/` |
 | 官方一页纸原理 | `packages/coding-agent/docs/how-pi-works.md` |
 
-**后续章节**（沿用原博客的章节划分，内容按 v0.99.2 重写）：
+**后续章节**：
 
 1. 开篇总览（本章）
 2. 三层架构与类型分层
@@ -430,22 +410,3 @@ pi-tui 不在堆栈链上。只有交互模式用它，它本身也不认识任�
 8. 上下文工程
 9. 上下文压缩
 10. 会话管理
-
----
-
-## 附录 · 原博客第 1 章勘误清单（对照 v0.99.2）
-
-| # | 原文 | 现状 |
-|---|---|---|
-| 1 | "四个核心包" | 主干仍是 ai / agent-core / coding-agent + tui，但仓库已有 14 个包目录，见第 2 节 |
-| 2 | "刻意不构建 MCP" | v0.99.0 起 MCP 是内置扩展（可关闭） |
-| 3 | "pi-tui 约 12000 行" | 约 19,200 行 |
-| 4 | "35 个 KnownProvider" | 42 个 |
-| 5 | "4 核心 + 3 辅助工具" | 4 个默认 + 4 个可选（新增 powershell） |
-| 6 | "静态系统提示词约 90 词" | 静态模板约 200 词 |
-| 7 | "改扩展文件，会话立即生效" | 需要执行 `/reload`（无需重启）；只有主题会自动监听文件 |
-| 8 | `getModel` 从 `pi-ai/compat` 导入 | compat 是临时兼容入口；推荐用 `createModels()` / `builtinModels()`，L3 用 `ModelRuntime` |
-| 9 | `const session = await createAgentSession(...)` | 返回 `{ session, ... }`，需要解构 |
-| 10 | "model/tools 在 prompt() 时传入 Agent" | 放在构造参数 `initialState` |
-| 11 | "pi-orchestrator（v0.80.x 新增）" | v0.80.3 引入，v0.81.0 更名为 `pi-server`，仍是实验性 |
-| 12 | "models.json schema 在 model-registry.ts:158-218" | `model-registry.ts` 现在只有 230 行，schema 相关逻辑见 `model-config.ts` 和 `docs/models.md` |

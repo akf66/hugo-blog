@@ -63,3 +63,11 @@ $post-radius: 10px;
     transform: scale(1.08);
   }
 }
+
+// 主题在暗色模式下会给所有图片加 brightness(70%)，架构图会变得发灰看不清，这里对专栏配图取消
+[data-theme="dark"] .article-entry img[src^="/images/harness/"] {
+  filter: none !important;
+  animation: none !important;
+  opacity: 1 !important;
+  border-radius: 8px;
+}
