@@ -5,9 +5,18 @@
 {{- end -}}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" />
 <h1 class="immersive-title">{{ .Title }}</h1>
+{{- /* 正文顶部的入口，脚本会把它挪到日期那一行 */ -}}
+<button type="button" class="immersive-entry" data-immersive-toggle title="{{ i18n "immersive_on" }}">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+  </svg>
+  <span>{{ i18n "immersive_entry" }}</span>
+</button>
+{{- /* 悬浮按钮：平时在右下角，沉浸时变成右上角的"退出"胶囊 */ -}}
 <button
   type="button"
   class="immersive-toggle"
+  data-immersive-toggle
   data-label-on="{{ i18n "immersive_on" }}"
   data-label-off="{{ i18n "immersive_off" }}"
   title="{{ i18n "immersive_on" }}"
@@ -20,12 +29,15 @@
   <svg class="immersive-icon-exit" viewBox="0 0 24 24" aria-hidden="true">
     <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
   </svg>
+  <span class="immersive-toggle-text">{{ i18n "immersive_off" }}</span>
+  <kbd class="immersive-toggle-kbd">Esc</kbd>
 </button>
 <script>
   (() => {
     const KEY = "immersive-reading";
     const root = document.documentElement;
     const btn = document.querySelector(".immersive-toggle");
+    const entry = document.querySelector(".immersive-entry");
 
     const apply = (on) => {
       root.classList.toggle("immersive", on);
@@ -38,8 +50,23 @@
       } catch (e) {}
     };
 
+    const placeEntry = () => {
+      const date = document.querySelector(".article-meta .article-date");
+      if (date) date.appendChild(entry);
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", placeEntry);
+    } else {
+      placeEntry();
+    }
+
     apply(root.classList.contains("immersive"));
-    btn.addEventListener("click", () => apply(!root.classList.contains("immersive")));
+    document.querySelectorAll("[data-immersive-toggle]").forEach((el) =>
+      el.addEventListener("click", () => {
+        apply(!root.classList.contains("immersive"));
+        window.scrollTo({ top: 0 });
+      })
+    );
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && root.classList.contains("immersive")) apply(false);
     });

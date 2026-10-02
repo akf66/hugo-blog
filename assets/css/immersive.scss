@@ -2,11 +2,55 @@
 // 断点与 themes/reimu/assets/css/_variables.scss 保持一致
 $mg-normal: "screen and (max-width: 767px)";
 
+@mixin immersive-icon($size) {
+  svg {
+    flex-shrink: 0;
+    width: $size;
+    height: $size;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
 .immersive-title {
   display: none;
 }
 
+// 正文顶部入口：和日期标签同一行，用实心品牌色区分
+.immersive-entry {
+  @include immersive-icon(16px);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 12px 16px 0;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: var(--red-1);
+  box-shadow: var(--shadow-meta);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: inherit;
+  white-space: nowrap;
+  transition: 0.3s;
+
+  &:hover {
+    box-shadow: var(--shadow-meta-hover);
+    transform: translateY(-2px);
+  }
+}
+
+// 还没被脚本挪进日期行时不显示，避免在文章外闪一下
+#main > .immersive-entry {
+  display: none;
+}
+
 .immersive-toggle {
+  @include immersive-icon(22px);
   position: fixed;
   right: 30px;
   bottom: 90px;
@@ -14,27 +58,23 @@ $mg-normal: "screen and (max-width: 767px)";
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   width: 48px;
   height: 48px;
   padding: 0;
   border: none;
-  border-radius: 50%;
-  background-color: var(--color-wrap);
+  border-radius: 24px;
+  background: var(--red-1);
   box-shadow: var(--shadow-card-hover);
-  color: var(--red-1);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  white-space: nowrap;
   transition: 0.3s;
 
-  svg {
-    width: 22px;
-    height: 22px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .immersive-icon-exit {
+  .immersive-icon-exit,
+  .immersive-toggle-text,
+  .immersive-toggle-kbd {
     display: none;
   }
 
@@ -47,11 +87,7 @@ $mg-normal: "screen and (max-width: 767px)";
     bottom: 80px;
     width: 40px;
     height: 40px;
-
-    svg {
-      width: 18px;
-      height: 18px;
-    }
+    @include immersive-icon(18px);
   }
 }
 
@@ -62,7 +98,8 @@ html.immersive {
   #footer,
   #article-nav,
   #comments,
-  .harness-intro {
+  .harness-intro,
+  .immersive-entry {
     display: none !important;
   }
 
@@ -95,13 +132,46 @@ html.immersive {
     }
   }
 
+  // 退出按钮：固定在右上角的胶囊，带文字和 Esc 提示
   .immersive-toggle {
+    top: 20px;
+    bottom: auto;
+    width: auto;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 20px;
+    @include immersive-icon(18px);
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
     .immersive-icon-enter {
       display: none;
     }
 
-    .immersive-icon-exit {
+    .immersive-icon-exit,
+    .immersive-toggle-text {
       display: block;
+    }
+
+    .immersive-toggle-kbd {
+      display: block;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.25);
+      font-family: inherit;
+      font-size: 12px;
+    }
+
+    @media #{$mg-normal} {
+      top: 12px;
+      right: 12px;
+      padding: 0 12px;
+
+      .immersive-toggle-kbd {
+        display: none;
+      }
     }
   }
 }
