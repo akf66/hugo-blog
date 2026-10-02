@@ -6,28 +6,28 @@
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" />
 <h1 class="immersive-title">{{ .Title }}</h1>
 {{- /* 正文顶部的入口，脚本会把它挪到日期那一行 */ -}}
-<button type="button" class="immersive-entry" data-immersive-toggle title="{{ i18n "immersive_on" }}">
+<button type="button" class="immersive-entry" data-immersive-toggle title="进入沉浸阅读">
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
   </svg>
-  <span>{{ i18n "immersive_entry" }}</span>
+  <span>沉浸阅读</span>
 </button>
 {{- /* 顶部导航栏里的入口，脚本会把它挪进 #sub-nav */ -}}
-<button type="button" class="immersive-nav" data-immersive-toggle title="{{ i18n "immersive_on" }}">
+<button type="button" class="immersive-nav" data-immersive-toggle title="进入沉浸阅读">
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
   </svg>
-  <span>{{ i18n "immersive_entry" }}</span>
+  <span>沉浸阅读</span>
 </button>
 {{- /* 悬浮胶囊：平时在右下角，沉浸时变成右上角的"退出"胶囊 */ -}}
 <button
   type="button"
   class="immersive-toggle"
   data-immersive-toggle
-  data-label-on="{{ i18n "immersive_on" }}"
-  data-label-off="{{ i18n "immersive_off" }}"
-  title="{{ i18n "immersive_on" }}"
-  aria-label="{{ i18n "immersive_on" }}"
+  data-label-on="进入沉浸阅读"
+  data-label-off="退出沉浸阅读"
+  title="进入沉浸阅读"
+  aria-label="进入沉浸阅读"
   aria-pressed="false"
 >
   <svg class="immersive-icon-enter" viewBox="0 0 24 24" aria-hidden="true">
@@ -36,8 +36,8 @@
   <svg class="immersive-icon-exit" viewBox="0 0 24 24" aria-hidden="true">
     <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
   </svg>
-  <span class="immersive-toggle-text-on">{{ i18n "immersive_entry" }}</span>
-  <span class="immersive-toggle-text">{{ i18n "immersive_off" }}</span>
+  <span class="immersive-toggle-text-on">沉浸阅读</span>
+  <span class="immersive-toggle-text">退出沉浸阅读</span>
   <kbd class="immersive-toggle-kbd">Esc</kbd>
 </button>
 <script>
