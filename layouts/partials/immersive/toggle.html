@@ -19,13 +19,17 @@
   </svg>
   <span>沉浸阅读</span>
 </button>
-{{- /* 侧栏目录卡片下方的入口和回到顶部，脚本会把它挪进 .sidebar-wrapper-container，跟着目录一起吸顶 */ -}}
+{{- /* 侧栏目录卡片下方的开关和回到顶部，脚本会把它挪进 .sidebar-wrapper-container，跟着目录一起吸顶；沉浸时侧栏保留 */ -}}
 <div class="immersive-side-row">
-  <button type="button" class="immersive-side" data-immersive-toggle title="进入沉浸阅读">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
+  <button type="button" class="immersive-side" data-immersive-toggle>
+    <svg class="immersive-icon-enter" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
     </svg>
-    <span>沉浸阅读</span>
+    <svg class="immersive-icon-exit" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
+    </svg>
+    <span class="immersive-side-text-on">沉浸阅读</span>
+    <span class="immersive-side-text-off">退出沉浸</span>
   </button>
   <button type="button" class="immersive-side-top" title="回到顶部" aria-label="回到顶部">
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -67,6 +71,8 @@
       btn.title = label;
       btn.setAttribute("aria-label", label);
       btn.setAttribute("aria-pressed", String(on));
+      const sideBtn = document.querySelector(".immersive-side");
+      if (sideBtn) sideBtn.title = label;
       try {
         localStorage.setItem(KEY, on ? "1" : "0");
       } catch (e) {}

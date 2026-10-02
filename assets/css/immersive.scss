@@ -129,12 +129,17 @@ $mq-large: "screen and (min-width: 960px)";
   }
 }
 
-// 有侧栏时右下角的悬浮胶囊和主题的回到顶部都让位给侧栏入口
+.immersive-side .immersive-icon-exit,
+.immersive-side-text-off {
+  display: none;
+}
+
+// 有侧栏时（沉浸与否都保留侧栏），右下角悬浮胶囊、右上角退出胶囊和主题的回到顶部都让位给侧栏这一行
 @media #{$mq-large} {
-  html.immersive-has-side:not(.immersive) {
+  html.immersive-has-side {
     .immersive-toggle,
     .sidebar-top {
-      display: none;
+      display: none !important;
     }
   }
 }
@@ -192,7 +197,6 @@ $mq-large: "screen and (min-width: 960px)";
 html.immersive {
   #header-nav,
   #header,
-  #sidebar,
   #footer,
   #article-nav,
   #comments,
@@ -215,6 +219,36 @@ html.immersive {
       @media #{$mg-normal} {
         padding: 0 16px;
       }
+    }
+
+    // 有侧栏时正文占满侧栏以外的全部宽度
+    &.sidebar-left #main,
+    &.sidebar-right #main {
+      @media #{$mq-large} {
+        flex: 1;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        margin: 0 16px;
+        padding: 0;
+      }
+    }
+
+    @media #{$mq-large} {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+  }
+
+  .immersive-side {
+    .immersive-icon-enter,
+    .immersive-side-text-on {
+      display: none;
+    }
+
+    .immersive-icon-exit,
+    .immersive-side-text-off {
+      display: block;
     }
   }
 
