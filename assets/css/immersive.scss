@@ -44,8 +44,37 @@ $mg-normal: "screen and (max-width: 767px)";
   }
 }
 
-// 还没被脚本挪进日期行时不显示，避免在文章外闪一下
-#main > .immersive-entry {
+// 顶部导航栏入口：实心胶囊，比旁边的图标醒目；手机上导航栏太挤，交给悬浮胶囊
+.immersive-nav {
+  @include immersive-icon(14px);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  margin-right: 16px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 16px;
+  background: var(--red-1);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: 0.3s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  @media #{$mg-normal} {
+    display: none;
+  }
+}
+
+// 还没被脚本挪到目标位置时不显示，避免在文章外闪一下
+#main > .immersive-entry,
+#main > .immersive-nav {
   display: none;
 }
 
@@ -59,16 +88,16 @@ $mg-normal: "screen and (max-width: 767px)";
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: 48px;
   height: 48px;
-  padding: 0;
+  padding: 0 20px;
   border: none;
   border-radius: 24px;
   background: var(--red-1);
   box-shadow: var(--shadow-card-hover);
   color: #fff;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 700;
   white-space: nowrap;
   transition: 0.3s;
 
@@ -79,14 +108,15 @@ $mg-normal: "screen and (max-width: 767px)";
   }
 
   &:hover {
-    transform: scale(1.08);
+    transform: translateY(-2px);
   }
 
   @media #{$mg-normal} {
     right: 20px;
     bottom: 80px;
-    width: 40px;
     height: 40px;
+    padding: 0 16px;
+    font-size: 14px;
     @include immersive-icon(18px);
   }
 }
@@ -99,7 +129,8 @@ html.immersive {
   #article-nav,
   #comments,
   .harness-intro,
-  .immersive-entry {
+  .immersive-entry,
+  .immersive-nav {
     display: none !important;
   }
 
@@ -146,7 +177,8 @@ html.immersive {
       transform: translateY(-2px);
     }
 
-    .immersive-icon-enter {
+    .immersive-icon-enter,
+    .immersive-toggle-text-on {
       display: none;
     }
 

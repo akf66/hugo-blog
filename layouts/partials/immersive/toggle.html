@@ -12,7 +12,14 @@
   </svg>
   <span>{{ i18n "immersive_entry" }}</span>
 </button>
-{{- /* 悬浮按钮：平时在右下角，沉浸时变成右上角的"退出"胶囊 */ -}}
+{{- /* 顶部导航栏里的入口，脚本会把它挪进 #sub-nav */ -}}
+<button type="button" class="immersive-nav" data-immersive-toggle title="{{ i18n "immersive_on" }}">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+  </svg>
+  <span>{{ i18n "immersive_entry" }}</span>
+</button>
+{{- /* 悬浮胶囊：平时在右下角，沉浸时变成右上角的"退出"胶囊 */ -}}
 <button
   type="button"
   class="immersive-toggle"
@@ -29,6 +36,7 @@
   <svg class="immersive-icon-exit" viewBox="0 0 24 24" aria-hidden="true">
     <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
   </svg>
+  <span class="immersive-toggle-text-on">{{ i18n "immersive_entry" }}</span>
   <span class="immersive-toggle-text">{{ i18n "immersive_off" }}</span>
   <kbd class="immersive-toggle-kbd">Esc</kbd>
 </button>
@@ -50,9 +58,13 @@
       } catch (e) {}
     };
 
+    const nav = document.querySelector(".immersive-nav");
+
     const placeEntry = () => {
       const date = document.querySelector(".article-meta .article-date");
       if (date) date.appendChild(entry);
+      const subNav = document.getElementById("sub-nav");
+      if (subNav) subNav.prepend(nav);
     };
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", placeEntry);
