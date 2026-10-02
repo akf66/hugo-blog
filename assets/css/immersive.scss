@@ -1,7 +1,6 @@
 // 沉浸阅读：html.immersive 时只保留正文
 // 断点与 themes/reimu/assets/css/_variables.scss 保持一致
 $mg-normal: "screen and (max-width: 767px)";
-$reading-width: 860px;
 
 .immersive-title {
   display: none;
@@ -68,14 +67,18 @@ html.immersive {
   }
 
   #content {
-    max-width: $reading-width;
+    max-width: 100%;
     padding-top: 48px;
 
     #main {
       width: 100%;
       max-width: 100%;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 40px;
+
+      @media #{$mg-normal} {
+        padding: 0 16px;
+      }
     }
   }
 
