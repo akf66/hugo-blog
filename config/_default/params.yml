@@ -76,7 +76,8 @@ excerpt_link: Read More
 # Make sure your code snippet is safeHTML
 injector:
   head_begin: # Inject code snippet right after <head>
-  head_end: # Inject code snippet right before </head>
+  # 沉浸阅读：在首屏渲染前恢复上次的开关状态，避免页头/侧栏闪一下再消失
+  head_end: '<script>try{if(localStorage.getItem("immersive-reading")==="1")document.documentElement.classList.add("immersive")}catch(e){}</script>'
   body_begin: # Inject code snippet right after <body>
   body_end: # Inject code snippet right before </body>
   sidebar_begin: # Inject code snippet right after <aside>

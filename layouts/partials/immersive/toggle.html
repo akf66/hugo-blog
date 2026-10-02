@@ -1,0 +1,47 @@
+{{- /* 沉浸阅读开关：隐藏页头、侧栏、页脚等周边元素，只保留正文 */ -}}
+{{- $css := resources.Get "css/immersive.scss" | toCSS (dict "targetPath" "css/immersive.css") -}}
+{{- if hugo.IsProduction -}}
+  {{- $css = $css | minify | fingerprint -}}
+{{- end -}}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" />
+<h1 class="immersive-title">{{ .Title }}</h1>
+<button
+  type="button"
+  class="immersive-toggle"
+  data-label-on="{{ i18n "immersive_on" }}"
+  data-label-off="{{ i18n "immersive_off" }}"
+  title="{{ i18n "immersive_on" }}"
+  aria-label="{{ i18n "immersive_on" }}"
+  aria-pressed="false"
+>
+  <svg class="immersive-icon-enter" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+  </svg>
+  <svg class="immersive-icon-exit" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
+  </svg>
+</button>
+<script>
+  (() => {
+    const KEY = "immersive-reading";
+    const root = document.documentElement;
+    const btn = document.querySelector(".immersive-toggle");
+
+    const apply = (on) => {
+      root.classList.toggle("immersive", on);
+      const label = on ? btn.dataset.labelOff : btn.dataset.labelOn;
+      btn.title = label;
+      btn.setAttribute("aria-label", label);
+      btn.setAttribute("aria-pressed", String(on));
+      try {
+        localStorage.setItem(KEY, on ? "1" : "0");
+      } catch (e) {}
+    };
+
+    apply(root.classList.contains("immersive"));
+    btn.addEventListener("click", () => apply(!root.classList.contains("immersive")));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && root.classList.contains("immersive")) apply(false);
+    });
+  })();
+</script>

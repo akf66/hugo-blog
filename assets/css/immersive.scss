@@ -1,0 +1,104 @@
+// 沉浸阅读：html.immersive 时只保留正文
+// 断点与 themes/reimu/assets/css/_variables.scss 保持一致
+$mg-normal: "screen and (max-width: 767px)";
+$reading-width: 860px;
+
+.immersive-title {
+  display: none;
+}
+
+.immersive-toggle {
+  position: fixed;
+  right: 30px;
+  bottom: 90px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--color-wrap);
+  box-shadow: var(--shadow-card-hover);
+  color: var(--red-1);
+  transition: 0.3s;
+
+  svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .immersive-icon-exit {
+    display: none;
+  }
+
+  &:hover {
+    transform: scale(1.08);
+  }
+
+  @media #{$mg-normal} {
+    right: 20px;
+    bottom: 80px;
+    width: 40px;
+    height: 40px;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+html.immersive {
+  #header-nav,
+  #header,
+  #sidebar,
+  #footer,
+  #article-nav,
+  #comments,
+  .harness-intro {
+    display: none !important;
+  }
+
+  #content {
+    max-width: $reading-width;
+    padding-top: 48px;
+
+    #main {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+  }
+
+  .immersive-title {
+    display: block;
+    margin: 0 0 24px;
+    padding: 0 8px;
+    font-size: 2em;
+    line-height: 1.4;
+    color: var(--color-default);
+
+    @media #{$mg-normal} {
+      font-size: 1.5em;
+    }
+  }
+
+  .immersive-toggle {
+    .immersive-icon-enter {
+      display: none;
+    }
+
+    .immersive-icon-exit {
+      display: block;
+    }
+  }
+}
