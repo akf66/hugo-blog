@@ -19,13 +19,20 @@
   </svg>
   <span>沉浸阅读</span>
 </button>
-{{- /* 侧栏目录卡片下方的入口，脚本会把它挪进 .sidebar-wrapper-container，跟着目录一起吸顶 */ -}}
-<button type="button" class="immersive-side" data-immersive-toggle title="进入沉浸阅读">
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
-  </svg>
-  <span>沉浸阅读</span>
-</button>
+{{- /* 侧栏目录卡片下方的入口和回到顶部，脚本会把它挪进 .sidebar-wrapper-container，跟着目录一起吸顶 */ -}}
+<div class="immersive-side-row">
+  <button type="button" class="immersive-side" data-immersive-toggle title="进入沉浸阅读">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+    </svg>
+    <span>沉浸阅读</span>
+  </button>
+  <button type="button" class="immersive-side-top" title="回到顶部" aria-label="回到顶部">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
+  </button>
+</div>
 {{- /* 悬浮胶囊：平时在右下角（有侧栏时让位给侧栏入口），沉浸时变成右上角的"退出"胶囊 */ -}}
 <button
   type="button"
@@ -66,7 +73,7 @@
     };
 
     const nav = document.querySelector(".immersive-nav");
-    const side = document.querySelector(".immersive-side");
+    const side = document.querySelector(".immersive-side-row");
 
     const placeEntry = () => {
       const date = document.querySelector(".article-meta .article-date");
@@ -91,6 +98,9 @@
         apply(!root.classList.contains("immersive"));
         window.scrollTo({ top: 0 });
       })
+    );
+    side.querySelector(".immersive-side-top").addEventListener("click", () =>
+      window.scrollTo({ top: 0, behavior: "smooth" })
     );
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && root.classList.contains("immersive")) apply(false);
