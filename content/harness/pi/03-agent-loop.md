@@ -337,13 +337,13 @@ function shouldTerminateToolBatch(finalizedCalls: FinalizedToolCallOutcome[]): b
 
 调用 `Agent.abort()`（或者中止你传给 `agentLoop()` 的 signal）后，按中止发生的时机分几种情况：
 
-- **请求模型时**：按 `StreamFn` 的约定，被中止的请求不抛错，而是返回一条 `stopReason: "aborted"` 的助手消息，循环从 2.4 节的提前出口退出。
+- **请求模型时**：按 `StreamFn` 的约定，被中止的请求不抛错，而是返回一条 `stopReason` 为 `aborted` 或 `error` 的助手消息，循环从 2.4 节的提前出口退出。用 pi-ai 的 `Models.streamSimple` 时，流式过程中被中止是 `aborted`；请求发出前 signal 就已中止，会在准备阶段失败，得到的是 `error`（详见第四章 5.2 节）。
 - **准备工具时**：`beforeToolCall` 之后、执行之前各检查一次，已中止就返回 `Operation aborted`。并行模式下，后面还没准备的调用直接丢弃。
 - **工具执行中**：signal 会传给 `execute`，工具要自己响应中止。
   - 串行模式下，当前调用结束后发现已中止，剩下的调用就不再执行，**也不会生成结果**。
   - 并行模式（默认）下，所有调用在执行前都已经准备好，同时启动；已中止的调用各自得到 `Operation aborted`，每个调用都有结果。
 
-工具批次结束后，循环并不会马上退出，而是照常调用 `finishTurn`、发出 `turn_end`，进入下一轮。下一次请求带着已中止的 signal，`streamFn` 返回 `aborted`，循环这才结束。探针用串行模式，中止发生在第一个工具执行期间，记录是这样的：
+工具批次结束后，循环并不会马上退出，而是照常调用 `finishTurn`、发出 `turn_end`，进入下一轮。下一次请求带着已中止的 signal 发出，`streamFn` 返回一条失败的助手消息，循环这才结束。用 pi-ai 的 `Models.streamSimple` 时，这条消息在准备阶段就生成，不会发出 HTTP 请求，`stopReason` 是 `error`，`errorMessage` 为 `This operation was aborted`。探针用的是假 `streamFn`，它对已中止的 signal 返回 `aborted`。探针用串行模式，中止发生在第一个工具执行期间，记录是这样的：
 
 ```text
 tool_execution_start(a) → tool_execution_end(a!: cancelled) → message_start/end(toolResult:a!)
