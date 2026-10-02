@@ -2,6 +2,7 @@
 // 断点与 themes/reimu/assets/css/_variables.scss 保持一致
 $mg-normal: "screen and (max-width: 767px)";
 $mq-large: "screen and (min-width: 960px)";
+$mg-large: "screen and (max-width: 959px)";
 
 @mixin immersive-icon($size) {
   svg {
@@ -206,9 +207,15 @@ html.immersive {
     display: none !important;
   }
 
+  // 顶部留白和侧栏吸顶的 top: 20px 一致，文章卡片与目录卡片顶端对齐
   #content {
     max-width: 100%;
-    padding-top: 48px;
+    padding-top: 20px;
+
+    // 没有侧栏时右上角有退出胶囊，给它让出位置
+    @media #{$mg-large} {
+      padding-top: 64px;
+    }
 
     #main {
       width: 100%;
@@ -252,15 +259,17 @@ html.immersive {
     }
   }
 
+  // 标题在文章卡片内，左右边距与下面的日期标签对齐
   .immersive-title {
     display: block;
-    margin: 0 0 24px;
-    padding: 0 8px;
+    margin: 0;
+    padding: 32px 36px 0;
     font-size: 2em;
     line-height: 1.4;
     color: var(--color-default);
 
     @media #{$mg-normal} {
+      padding: 24px 16px 0;
       font-size: 1.5em;
     }
   }

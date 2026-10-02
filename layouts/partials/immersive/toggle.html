@@ -4,6 +4,7 @@
   {{- $css = $css | minify | fingerprint -}}
 {{- end -}}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" />
+{{- /* 沉浸时的标题，脚本会把它挪进文章卡片顶部，和侧栏目录卡片顶端对齐 */ -}}
 <h1 class="immersive-title">{{ .Title }}</h1>
 {{- /* 正文顶部的入口，脚本会把它挪到日期那一行 */ -}}
 <button type="button" class="immersive-entry" data-immersive-toggle title="进入沉浸阅读">
@@ -81,7 +82,11 @@
     const nav = document.querySelector(".immersive-nav");
     const side = document.querySelector(".immersive-side-row");
 
+    const title = document.querySelector(".immersive-title");
+
     const placeEntry = () => {
+      const inner = document.querySelector("article.h-entry .article-inner");
+      if (inner) inner.prepend(title);
       const date = document.querySelector(".article-meta .article-date");
       if (date) date.appendChild(entry);
       const subNav = document.getElementById("sub-nav");
