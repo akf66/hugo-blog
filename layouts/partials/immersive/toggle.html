@@ -19,7 +19,14 @@
   </svg>
   <span>沉浸阅读</span>
 </button>
-{{- /* 悬浮胶囊：平时在右下角，沉浸时变成右上角的"退出"胶囊 */ -}}
+{{- /* 侧栏目录卡片下方的入口，脚本会把它挪进 .sidebar-wrapper-container，跟着目录一起吸顶 */ -}}
+<button type="button" class="immersive-side" data-immersive-toggle title="进入沉浸阅读">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+  </svg>
+  <span>沉浸阅读</span>
+</button>
+{{- /* 悬浮胶囊：平时在右下角（有侧栏时让位给侧栏入口），沉浸时变成右上角的"退出"胶囊 */ -}}
 <button
   type="button"
   class="immersive-toggle"
@@ -59,12 +66,18 @@
     };
 
     const nav = document.querySelector(".immersive-nav");
+    const side = document.querySelector(".immersive-side");
 
     const placeEntry = () => {
       const date = document.querySelector(".article-meta .article-date");
       if (date) date.appendChild(entry);
       const subNav = document.getElementById("sub-nav");
       if (subNav) subNav.prepend(nav);
+      const sidebar = document.querySelector("#sidebar .sidebar-wrapper-container");
+      if (sidebar) {
+        sidebar.appendChild(side);
+        root.classList.add("immersive-has-side");
+      }
     };
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", placeEntry);
