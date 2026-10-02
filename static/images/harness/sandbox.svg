@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <title>沙箱设计</title>
+  <!-- 外层隔离边界 -->
+  <rect x="3" y="3" width="58" height="58" rx="12" stroke="#e8590c" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"/>
+  <!-- 立方体（被隔离的执行环境） -->
+  <path d="M32 13L49 22.5V41.5L32 51L15 41.5V22.5L32 13Z" fill="#fff4e6" stroke="#d9480f" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M15 22.5L32 32L49 22.5" stroke="#d9480f" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M32 32V51" stroke="#d9480f" stroke-width="3"/>
+  <path d="M32 13L49 22.5L32 32L15 22.5Z" fill="#ffa94d"/>
+  <path d="M32 13L49 22.5L32 32L15 22.5Z" stroke="#d9480f" stroke-width="3" stroke-linejoin="round"/>
+</svg>
