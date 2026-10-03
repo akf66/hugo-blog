@@ -1,16 +1,16 @@
 ---
 title: "Pi 源码分析 03 · Agent Loop：一次运行是怎么转起来的"
 date: 2026-10-01T19:30:00+08:00
-description: "接着第二章往下讲：当前发布的 pi-agent-core 引擎里，双层循环怎么继续和停下、一轮里钩子和事件的先后顺序、工具的串行与并行以及各种失败的去向，还有 Agent 类和直接调用 agentLoop() 的区别。"
+description: "接着第二章往下讲：pi-agent-core 的引擎里，双层循环怎么继续和停下、一轮里钩子和事件的先后顺序、工具的串行与并行以及各种失败的去向，还有 Agent 类和直接调用 agentLoop() 的区别。"
 tags:
   - Harness
   - Pi
   - 源码分析
 ---
 
-> **版本基线**：`earendil-works/pi` main 分支 `v0.99.2-29-g0f8740bb6`（2026-10-01），commit `0f8740bb6`。本章涉及的 `agent-loop.ts`、`agent.ts`、`types.ts` 与 npm 上发布的 `@earendil-works/pi-agent-core@0.99.2` 完全一致。文中所有行为、数字和代码均以该版本为准。
+> **版本基线**：`earendil-works/pi` v1.0.1（2026-10-03），commit `a7229ddc2`。文中所有行为、数字和代码均以该版本为准。
 
-第二章讲到，L3 在创建 `Agent` 时传入一批钩子，又在创建后改写了另一批。本章接着往下讲，打开 L2 当前发布的引擎，看这些钩子在一次运行里什么时候被调用，循环靠什么继续、什么时候停下。
+第二章讲到，L3 在创建 `Agent` 时传入一批钩子，又在创建后改写了另一批。本章接着往下讲，打开 L2 的引擎，看这些钩子在一次运行里什么时候被调用，循环靠什么继续、什么时候停下。
 
 <!--more-->
 
@@ -25,7 +25,7 @@ tags:
 
 ## 0 · 阅读说明
 
-- 本章只讲当前发布的引擎：`Agent` 类和 `agentLoop()` 系列函数。第二章第 5 节提到的实验引擎不在本章范围内。
+- 本章只讲 pi-agent-core 里的引擎：`Agent` 类和 `agentLoop()` 系列函数。第二章第 5 节提到的 pi-durable 是另一个包里的引擎，不在本章范围内。
 - 文中的事件顺序都用一个探针脚本实际跑过。脚本用一个假的 `streamFn` 按剧本返回助手消息，订阅 `Agent` 的事件并记录钩子的调用时刻。本章引用的运行记录都来自这个脚本。
 - 后文说的"一轮"（turn），指一次模型请求加上这条回复里所有工具调用的执行，和 `turn_start` / `turn_end` 两个事件对应。
 
@@ -341,7 +341,7 @@ function shouldTerminateToolBatch(finalizedCalls: FinalizedToolCallOutcome[]): b
 - **准备工具时**：`beforeToolCall` 之后、执行之前各检查一次，已中止就返回 `Operation aborted`。并行模式下，后面还没准备的调用直接丢弃。
 - **工具执行中**：signal 会传给 `execute`，工具要自己响应中止。
   - 串行模式下，当前调用结束后发现已中止，剩下的调用就不再执行，**也不会生成结果**。
-  - 并行模式（默认）下，所有调用在执行前都已经准备好，同时启动；已中止的调用各自得到 `Operation aborted`，每个调用都有结果。
+  - 并行模式（默认）下，所有调用在执行前都已经准备好，同时启动，每个调用都有结果：已经在执行的调用，结果取决于工具自己怎么响应中止；开始执行时 signal 已经中止的调用，引擎直接给它 `Operation aborted`。
 
 工具批次结束后，循环并不会马上退出，而是照常调用 `finishTurn`、发出 `turn_end`，进入下一轮。下一次请求带着已中止的 signal 发出，`streamFn` 返回一条失败的助手消息，循环这才结束。用 pi-ai 的 `Models.streamSimple` 时，这条消息在准备阶段就生成，不会发出 HTTP 请求，`stopReason` 是 `error`，`errorMessage` 为 `This operation was aborted`。探针用的是假 `streamFn`，它对已中止的 signal 返回 `aborted`。探针用串行模式，中止发生在第一个工具执行期间，记录是这样的：
 
@@ -350,7 +350,7 @@ tool_execution_start(a) → tool_execution_end(a!: cancelled) → message_start/
 → turn_end → turn_start → streamFn#1 → message_start/end(assistant, aborted) → turn_end → agent_end
 ```
 
-第二个调用 `b` 没有任何事件和结果。同样的场景换成并行模式，`b` 会得到一条 `Operation aborted` 的结果。串行模式下留下的这种调用，之后再把这段对话发给模型时，pi-ai 的消息转换会给这种没有结果的调用补一条 `No result provided` 的错误结果，让请求符合供应商的格式要求。
+第二个调用 `b` 没有任何事件和结果。同样的场景换成并行模式，`b` 和 `a` 同时在执行，也收到中止信号，各自得到一条错误结果（探针里都是工具抛出的 `cancelled`）；如果 `a` 一开始执行就同步中止，`b` 开始执行时 signal 已经中止，得到的是 `Operation aborted`。串行模式下留下的这种调用，之后再把这段对话发给模型时，pi-ai 的消息转换会给这种没有结果的调用补一条 `No result provided` 的错误结果，让请求符合供应商的格式要求。
 
 ---
 
@@ -394,7 +394,7 @@ for (const listener of this.listeners) {
 订阅者按注册顺序依次执行，每一个都被等待。探针里，订阅者在助手消息的 `message_end` 上等待 50ms，再看工具什么时候开始执行：
 
 - `Agent`：订阅者开始 → 订阅者结束 → `execute`
-- `agentLoop()`：`execute` → 订阅者开始 → 订阅者结束
+- `agentLoop()`：`execute` 不等订阅者结束就开始。探针里的顺序是订阅者开始 → `execute` → 订阅者结束；`execute` 和订阅者谁先开始，取决于消费者什么时候读取事件
 
 这正是 README 里说的：用 `Agent` 时，助手消息的 `message_end` 处理完，才会开始准备工具，所以 `beforeToolCall` 看到的状态里已经有了这条助手消息。
 

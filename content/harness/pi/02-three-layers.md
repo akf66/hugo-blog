@@ -8,7 +8,7 @@ tags:
   - 源码分析
 ---
 
-> **版本基线**：`earendil-works/pi` main 分支 `v1.0.0-25-ga276dabe5`（2026-10-03），commit `a276dabe5`。文中所有架构、数字和代码均以该版本源码为准。
+> **版本基线**：`earendil-works/pi` v1.0.1（2026-10-03），commit `a7229ddc2`。文中所有架构、数字和代码均以该版本源码为准。
 
 第一章画出了 Pi 的骨架：L1 `pi-ai` 调模型，L2 `pi-agent-core` 跑循环，L3 `pi-coding-agent` 做产品，依赖只朝下。本章接着往下讲，打开层与层之间的接口，看看这三层具体是怎么接起来的。
 
@@ -288,7 +288,7 @@ this._emit(event.type === "agent_end" ? { ...event, willRetry: this._willRetryAf
 
 两套引擎有一个共同点：**都只往下依赖 pi-ai，都不依赖 coding-agent**。三层结构对它们同样成立，在变的只是 L2 的实现。`pi-durable` 也不依赖 agent-core，内部依赖只有 pi-ai 和 `chord`（第一章实验区里的组合运行时）。
 
-从 2026-08-01 到 2026-10-03 的提交可以看出开发重心在哪里：`agent-loop.ts` 只有 9 次提交，`pi-durable` 从 2026-09-18 创建以来有 77 次（含 2 次发版提交）。coding-agent 的实验目录里已经有三处在用它：
+从 2026-08-01 到 2026-10-03 的提交可以看出开发重心在哪里：`agent-loop.ts` 只有 9 次提交，`pi-durable` 从 2026-09-18 创建以来有 78 次（其中 17 次是发版和新增 changelog 段落的例行提交）。coding-agent 的实验目录里已经有三处在用它：
 
 - `experimental/durable`：单进程的终端编码 Agent
 - 实验性 server / client 的会话 worker：每个会话一个 `pi-durable` 实例

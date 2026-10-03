@@ -8,7 +8,7 @@ tags:
   - 源码分析
 ---
 
-> **版本基线**：`earendil-works/pi` main 分支 `v1.0.0-8-g3874b3e98`（2026-10-02），commit `3874b3e98`。从第五章的基线 `7fbbd5f4a` 到这里有 6 个提交，都没有改动会话相关的代码。npm 上的 1.0.0 与基线在 `session-manager.ts` 上完全一致。文中所有行为、数字和代码均以该版本为准。
+> **版本基线**：`earendil-works/pi` v1.0.1（2026-10-03），commit `a7229ddc2`。文中所有行为、数字和代码均以该版本为准。
 
 前五章讲的都是一次运行内部的事：循环怎么转、模型怎么调、工具怎么跑。运行结束以后，这些消息去了哪里？下一次请求时，模型看到的历史又是从哪来的？本章接着往下讲 coding-agent 的会话：一条消息怎么写进会话树，又怎么在下一次请求前变回上下文。
 
@@ -29,7 +29,7 @@ tags:
 - 本章讲已发布的 `pi` 用的会话实现：pi-coding-agent 的 `SessionManager`（会话的读写和树操作）和 `AgentSession` 里接线的部分。源码里 `src/experimental/` 下还有一套基于 pi-durable 和 SQLite 的会话，不随 npm 包发布，不在本章范围内。
 - 压缩怎么挑选要总结的消息、摘要怎么生成，留给第七章。本章只讲压缩条目写进会话以后，怎样参与上下文的投影。
 - 第二章 3.2 节讲过 4 种自定义消息（`bashExecution`、`custom`、`branchSummary`、`compactionSummary`）和 `convertToLlm`，第五章讲过 system 消息上的 `sections`、`toolsAdded`、`toolsRemoved`。本章引用这些结论，不再重复。
-- 文中的行为都用探针实际跑过。探针用 npm 上的 1.0.0，一部分直接调用 `SessionManager`，另一部分用 `createAgentSession` 加 pi-ai 自带的 faux 供应商（按脚本返回预先写好的回复，并能拿到每次请求的上下文），不需要真实的 API key。
+- 文中的行为都用探针实际跑过。探针用 npm 上的 1.0.1，一部分直接调用 `SessionManager`，另一部分用 `createAgentSession` 加 pi-ai 自带的 faux 供应商（按脚本返回预先写好的回复，并能拿到每次请求的上下文），不需要真实的 API key。
 - 术语：
   - **条目**（entry）：会话文件里除文件头以外的一行。
   - **leaf**：当前位置，下一个条目会挂在它下面。
