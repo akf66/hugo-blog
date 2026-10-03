@@ -248,7 +248,7 @@ pi-tui 不在堆栈链上：主要由交互模式使用（扩展和工具渲染�
 | ⑥ 原始流 | 外部 | 各家供应商的原始流事件 | `provider_stream_event`（只读观察） |
 | ⑦ 归一化 | L1 | 原始流 → `AssistantMessageEvent`（text_delta、toolcall_* 等） | —— |
 | ⑧ 执行工具 | L2 | 发出 `message_*`；有 toolCall 就执行 `before → execute → after`，然后**回到 ③** | `tool_call`（可拦截）/ `tool_result` |
-| ⑨ 落盘 | L3 | 写 JSONL 会话树；超过阈值自动压缩；出错自动重试 | `turn_end`、`session_compact` 等 |
+| ⑨ 落盘 | L3 | 写 JSONL 会话树；超过阈值自动压缩（运行结束后，以及一次运行的两轮之间）；出错自动重试 | `turn_end`、`session_compact` 等 |
 | ⑩ 呈现 | L3 | `AgentSessionEvent` 广播给 TUI / JSON / RPC / SDK | —— |
 
 这张表是读懂后续章节的地图：
