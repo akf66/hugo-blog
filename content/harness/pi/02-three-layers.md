@@ -286,7 +286,7 @@ this._emit(event.type === "agent_end" ? { ...event, willRetry: this._willRetryAf
 1. **`Agent`（当前发布的引擎）**：agent-core 的 6 个文件，约 2.5k 行，就是前四节讲的内容。
 2. **`pi-durable`（持久化引擎，规范里叫 Pico5）**：独立的包，约 17.7k 行，已经发布到 npm，README 开头标着 "Experimental"（API 会在版本之间不经通知地变化）。README 是这样介绍它的："Conversations, model turns, tool calls, and your own state are committed to storage before anything is shown." 也就是说，消息、模型输出、工具调用和你的状态，都先写入存储再展示。进程中途崩溃，重新打开就能接着跑。
 
-两套引擎有一个共同点：**都只往下依赖 pi-ai，都不依赖 coding-agent**。三层结构对它们同样成立，在变的只是 L2 的实现。`pi-durable` 也不依赖 agent-core，内部依赖只有 pi-ai 和 `chord`（第一章提到的基础库）。
+两套引擎有一个共同点：**都只往下依赖 pi-ai，都不依赖 coding-agent**。三层结构对它们同样成立，在变的只是 L2 的实现。`pi-durable` 也不依赖 agent-core，内部依赖只有 pi-ai 和 `chord`（第一章实验区里的组合运行时）。
 
 从 2026-08-01 到 2026-10-03 的提交可以看出开发重心在哪里：`agent-loop.ts` 只有 9 次提交，`pi-durable` 从 2026-09-18 创建以来有 77 次（含 2 次发版提交）。coding-agent 的实验目录里已经有三处在用它：
 
