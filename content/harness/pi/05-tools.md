@@ -8,7 +8,7 @@ tags:
   - 源码分析
 ---
 
-> **版本基线**：`earendil-works/pi` main 分支 `v1.0.0-2-g7fbbd5f4a`（2026-10-01），commit `7fbbd5f4a`。从第四章的基线 `f29ea3deb` 到这里有 16 个提交，其中包括 v1.0.0 的发布。和工具有关的是：bash 结构化输出的字段说明改短了，codemode 加了图像生成接口，pi-ai 修正了 grammar 工具调用回放时的 id。npm 上的 1.0.0 与基线在 `packages/ai`、`packages/agent` 和 `packages/coding-agent/src` 上只差一个界面动画提交。文中所有行为、数字和代码均以该版本为准。
+> **版本基线**：`earendil-works/pi` v1.0.1（2026-10-03），commit `a7229ddc2`。文中所有行为、数字和代码均以该版本为准。
 
 第四章讲到，`Models.streamSimple` 把各家的流归一成统一事件，其中一组是 `toolcall_*`：模型想调用一个工具。本章接着往下讲工具本身：一个工具从被定义出来，到模型看见它、调用它、拿到结果，中间经过了哪些代码。
 
@@ -32,7 +32,7 @@ tags:
   - `beforeToolCall` / `afterToolCall` 两个钩子（第三章 4.2 节）
   - 串行与并行（第三章 4.1 节）、`terminate`（4.4 节）、中止（4.5 节）
 - 第二章 3.1 节讲过 `Tool → AgentTool → ToolDefinition` 三种类型和 `wrapToolDefinition` 的代码，本章第 2 节在此基础上讲各字段在运行时被谁读取。
-- 文中的行为和计数都用探针实际跑过。探针用 npm 上的 1.0.0 三个包，走真实的 `Models.streamSimple`（产品层走 `createAgentSession`），把模型的 `baseUrl` 指向本地 mock 服务；mock 按 Anthropic 或 OpenAI 的格式返回预先写好的 SSE 流，并记录每次收到的请求体。不需要真实的 API key。
+- 文中的行为和计数都用探针实际跑过。探针用 npm 上的 1.0.1 三个包，走真实的 `Models.streamSimple`（产品层走 `createAgentSession`），把模型的 `baseUrl` 指向本地 mock 服务；mock 按 Anthropic 或 OpenAI 的格式返回预先写好的 SSE 流，并记录每次收到的请求体。不需要真实的 API key。
 - 术语：
   - **声明**：发给模型的工具描述（名字、说明、参数 schema）。
   - **激活**：工具在当前的声明集合里。
@@ -138,12 +138,12 @@ coding-agent 的 `AgentSession` 每一轮都这样做，`prepareRequest` 里还�
 
 **A · 原生增删**：`anthropic-messages`，模型同时声明了 `supportsMidConvoSystemMessages`（接受对话中途的 system 消息）和 `supportsMidConvoToolChanges`（接受中途增删工具）。内置目录里有 6 个模型满足，例如 `claude-fable-5`、`claude-opus-5`。
 
-- 初始工具留在请求顶层的 `tools` 里，缓存断点打在最后一个初始工具上。
-- 后来加入的工具也放进顶层 `tools`，但标记 `defer_loading: true`，然后在对话中途的 system 消息里用 `tool_addition` 块启用。
-- 移除的工具仍留在顶层列表里，用 `tool_removal` 块撤下。
-- 顶层列表只增不减，所以工具集怎么变，缓存前缀都不会失效。
-- 从第一次请求起，顶层列表里就多一个永远不会启用的 `__pi_deferred_placeholder__`。源码注释的解释是：只要有任何一个工具带 `defer_loading`，Anthropic 就会在提示词里加一段隐藏的脚手架；提前放一个占位工具，这段脚手架从第一次请求起就在缓存前缀里，第一个后加的工具不会让缓存整段失效。
-- 两种情况退回 C：历史里同一个名字被重新定义过，按名字引用的增删表达不了；开头一个工具都没有，Anthropic 不接受全部是延迟声明的工具列表。
+- 初始工具留在请求顶层的 `tools` 里，缓存断点打在最后一个初始工具上，后面跟一个占位工具 `__pi_deferred_placeholder__`（带 `defer_loading: true`，永远不会启用）。
+- 后来加入的工具不进顶层列表，而是在对话中途的 system 消息里用 `tool_addition` 块按值给出完整定义（`tool_definition`）。请求为此带上 `inline-tools-2026-09-15` 这个 beta 标记。
+- 移除的工具用 `tool_removal` 块按名字撤下。同名工具换了定义时，只发一个带新定义的 `tool_addition`，新定义直接替换旧定义。
+- 顶层列表从第一次请求起就固定不变，所以工具集怎么变，缓存前缀都不会失效。
+- 占位工具的作用，源码注释是这样解释的：Anthropic 会为对话中途的工具变更在提示词里加一段隐藏的脚手架；提前放一个占位工具，这段脚手架从第一次请求起就在缓存前缀里，第一次工具变更不会让缓存整段失效。
+- 开头一个工具都没有时退回 C：Anthropic 不接受全部是延迟声明的工具列表，占位工具前面至少要有一个初始工具。
 
 **B · 只能就地新增**：工具可以在新增的位置声明，但不能撤下。
 
@@ -157,8 +157,8 @@ coding-agent 的 `AgentSession` 每一轮都这样做，`prepareRequest` 里还�
 探针把同一段对话分别发给四个模型，只看第二次请求。这段对话先声明了 `keep`，后来新增 `extra`，有的场景还移除了 `keep`：
 
 ```text
-anthropic/claude-fable-5   只新增   tools=[keep, __pi_deferred_placeholder__(deferred), extra(deferred)]  中途: system[tool_addition:extra]
-                           新增+移除 同上                                                                   中途: system[tool_removal:keep, tool_addition:extra]
+anthropic/claude-fable-5   只新增   tools=[keep, __pi_deferred_placeholder__(deferred)]  中途: system[tool_addition:extra（完整定义）]
+                           新增+移除 同上                                             中途: system[tool_removal:keep, tool_addition:extra（完整定义）]
 openai/gpt-5.4             只新增   tools=[keep]          中途: additional_tools[extra]
                            新增+移除 tools=[extra]         （退回全量）
 kimi-k3 (fireworks)        只新增   tools=[keep]          中途: system{tools:[extra]}
@@ -460,7 +460,8 @@ nestedCalls: [{ id: ".../1", name: "read", status: "ok", … },
 
 ### 7.2 MCP
 
-- **配置文件**：`~/.pi/agent/mcp.json`；项目被信任时，还会读 `<cwd>/.pi/mcp.json`。格式是常见的 `mcpServers`。扩展也可以用 `pi.registerMcpServer(name, config)` 从代码里添加。
+- **配置文件**：`~/.pi/agent/mcp.json`；项目被信任时，还会读 `<cwd>/.pi/mcp.json`。格式是常见的 `mcpServers`。扩展也可以用 `pi.registerMcpServer(name, config)`（在当前会话里添加一个服务器）从代码里添加。
+- **项目覆盖**：项目里的条目不写 `command`、`url`、`type` 时，只覆盖同名全局服务器的 `enabled`、`exposure`、`toolExposure`，其余配置（包括凭据）沿用全局条目。
 - **工具名**：`mcp__<server>__<tool>`，非 `[A-Za-z0-9_]` 的字符换成 `_`，最长 64 个字符；超长或重名时加 8 位哈希后缀。
 - **暴露方式**：`codemode`（默认）、`deferred`、`direct`、`hidden`，可以用 `toolExposure` 按工具名（支持通配）单独设置。
 - MCP 的 `codemode` 在注册表里记为 `deferred`。MCP 的 `codemode` 和 `deferred` 两种设置，区别只在于扩展顺带激活哪个发现工具：前者激活 `codemode`（设置了 `autoEnableCodemode: false` 时不激活），后者激活 `tool_search`。
@@ -484,13 +485,13 @@ nestedCalls: [{ id: ".../1", name: "read", status: "ok", … },
 开始时激活: read, bash, edit, write, tool_search, weather
 req1 tools=[read, bash, edit, write, tool_search, weather, __pi_deferred_placeholder__(deferred)]
 req2 同上                                           tool_result: "Berlin: 18°C"
-req3 tools=[…, __pi_deferred_placeholder__(deferred), deploy(deferred)]
-     中途 system: tool_addition(deploy)              tool_result: "Loaded 1 tool. They are available from your next call:\n- deploy: Deploy a service to production"
+req3 同上
+     中途 system: tool_addition(deploy 完整定义)      tool_result: "Loaded 1 tool. They are available from your next call:\n- deploy: Deploy a service to production"
 req4 同上                                           tool_result: "deployed api"
 结束时激活: read, bash, edit, write, tool_search, weather, deploy
 ```
 
-模型换成 `claude-haiku-4-5`（不支持中途改工具）再跑一遍，req3 起顶层 `tools` 直接变成包含 `deploy` 的完整列表。对话记录里两次都是同样两条 system 消息：开头一条声明 6 个初始工具，加载后一条 `toolsAdded: [deploy]`。
+四次请求的顶层 `tools` 完全一样，`deploy` 的定义只出现在对话中途那条 system 消息里。模型换成 `claude-haiku-4-5`（不支持中途改工具）再跑一遍，req3 起顶层 `tools` 直接变成包含 `deploy` 的完整列表。对话记录里两次都是同样两条 system 消息：开头一条声明 6 个初始工具，加载后一条 `toolsAdded: [deploy]`。
 
 两个细节：
 
@@ -639,7 +640,7 @@ export default function (pi: ExtensionAPI) {
 | 嵌套调用记录上限 | 256 次 |
 | 支持原生增删工具的模型 | 6 个 |
 | 支持 grammar 工具的模型 | 111 个 |
-| 内置模型目录 | 1532 个对话模型 |
+| 内置模型目录 | 1536 个对话模型 |
 | 工具相关目录的提交（北京时间 2026-08-01 至 2026-10-01，不含合并提交） | `core/tools/` 23 次，`extensions/` 26 次，`agent-loop.ts` 9 次 |
 
 ---
@@ -668,7 +669,7 @@ export default function (pi: ExtensionAPI) {
 | 包装 | `packages/coding-agent/src/core/tools/tool-definition-wrapper.ts` → `wrapToolDefinition` |
 | 工具声明的重放 | `packages/ai/src/utils/transcript.ts` → `getCurrentTools`、`getToolStateChanges`、`resolveTranscriptTools` |
 | 声明变化 | `packages/agent/src/agent-loop.ts` → `declareToolChanges` |
-| 三种发法 | `packages/ai/src/api/anthropic-messages.ts` → `buildParams`、`DEFERRED_TOOL_PLACEHOLDER`；`openai-responses-shared.ts`；`openai-completions.ts` |
+| 三种发法 | `packages/ai/src/api/anthropic-messages.ts` → `buildParams`、`convertMessages`、`DEFERRED_TOOL_PLACEHOLDER`；`openai-responses-shared.ts`；`openai-completions.ts` |
 | 参数准备与校验 | `packages/agent/src/agent-loop.ts` → `prepareToolCall`；`packages/ai/src/utils/validation.ts` → `validateToolArguments` |
 | 严格 schema 与语法 | `packages/ai/src/api/constrained-sampling.ts` |
 | 执行与结果消息 | `packages/agent/src/agent-loop.ts` → `executePreparedToolCall`、`createToolResultMessage`、`runToolCall` |

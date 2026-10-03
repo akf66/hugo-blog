@@ -1,14 +1,14 @@
 ---
 title: "Pi 源码分析 01 · 开篇：Pi 是什么，以及它的骨架"
 date: 2026-10-01T10:00:00+08:00
-description: "基于 earendil-works/pi v1.0.0 之后的 main（a276dabe5）的开篇：三重身份、四层堆栈、依赖规则、一次 prompt 的旅程，以及定制方式。"
+description: "基于 earendil-works/pi v1.0.1 的开篇：三重身份、四层堆栈、依赖规则、一次 prompt 的旅程，以及定制方式。"
 tags:
   - Harness
   - Pi
   - 源码分析
 ---
 
-> **版本基线**：`earendil-works/pi` main 分支 `v1.0.0-25-ga276dabe5`（2026-10-03），commit `a276dabe5`。文中所有架构、数字和代码均以该版本源码为准。
+> **版本基线**：`earendil-works/pi` v1.0.1（2026-10-03），commit `a7229ddc2`。文中所有架构、数字和代码均以该版本源码为准。
 
 本章不深入实现细节，只回答两个问题：
 

@@ -8,7 +8,7 @@ tags:
   - 源码分析
 ---
 
-> **版本基线**：`earendil-works/pi` main 分支 `v0.99.2-32-gf29ea3deb`（2026-10-01），commit `f29ea3deb`。从第三章的基线 `0f8740bb6` 到这里只有 3 个提交，都在 coding-agent 里，`packages/ai` 没有变化。文中所有行为、数字和代码均以该版本为准。
+> **版本基线**：`earendil-works/pi` v1.0.1（2026-10-03），commit `a7229ddc2`。文中所有行为、数字和代码均以该版本为准。
 
 第三章讲到，`runLoop` 每一轮把消息交给 `streamFn`，然后消费它返回的事件流。本章接着往下讲，打开 L1 的 pi-ai，从 `streamFn` 被调用开始，一直讲到供应商的原始流变成统一的事件。
 
@@ -27,7 +27,7 @@ tags:
 ## 0 · 阅读说明
 
 - 本章只讲已发布的 pi-ai（`@earendil-works/pi-ai`），而且只讲对话模型的流式请求。图像生成、分类模型、延迟返回（deferred）这几条支线只在需要时提一句。
-- 文中的事件顺序、错误信息和计数都用探针脚本实际跑过。探针在本地起一个假的 HTTP 服务，按 Anthropic 和 OpenAI 的格式返回 SSE 流，再把模型的 `baseUrl` 指向它，不需要真实的 API key。脚本用的是 npm 上的 `@earendil-works/pi-ai@0.99.2`，它和基线的 `packages/ai` 只差一个与流式请求无关的提交（Anthropic OAuth 的登录方式）。
+- 文中的事件顺序、错误信息和计数都用探针脚本实际跑过。探针在本地起一个假的 HTTP 服务，按 Anthropic 和 OpenAI 的格式返回 SSE 流，再把模型的 `baseUrl` 指向它，不需要真实的 API key。脚本用的是 npm 上的 `@earendil-works/pi-ai@1.0.1`，和基线是同一个版本。
 - 本章的术语：
   - **供应商**（provider）：一个运行时单元，带着自己的 id、凭据规则、模型目录和请求方法，例如 `anthropic`、`deepseek`。
   - **线协议**（api）：和模型服务通信的请求、响应格式，例如 `anthropic-messages`、`openai-completions`。
@@ -504,7 +504,7 @@ const agent = new Agent({
 探针用这个包装跑了一次带工具调用的运行，`Agent` 正常完成了两次请求，日志如下：
 
 ```text
-[llm] anthropic/claude-fable-5 msgs=2 stop=toolUse firstDelta=54ms in=100 out=9
+[llm] anthropic/claude-fable-5 msgs=2 stop=toolUse firstDelta=42ms in=100 out=9
 [llm] anthropic/claude-fable-5 msgs=4 stop=stop firstDelta=3ms in=120 out=5
 ```
 
@@ -522,8 +522,8 @@ const agent = new Agent({
 | 请求级重试的默认次数 | 0 |
 | `maxRetryDelayMs` 默认值 | 60 秒 |
 | OAuth 提前刷新窗口 | 5 分钟 |
-| `src/api/` | 39 个文件，12,835 行 |
-| `packages/ai` 的提交（北京时间 2026-08-01 至 2026-10-01，含合并提交） | 261 次，其中 `src/api/` 87 次 |
+| `src/api/` | 39 个文件，12,859 行 |
+| `packages/ai` 的提交（北京时间 2026-08-01 至 2026-10-01，不含合并提交） | 246 次，其中 `src/api/` 82 次 |
 
 图像生成另有 1 种线协议，分类模型另有 3 种，不算在 10 种里。
 
