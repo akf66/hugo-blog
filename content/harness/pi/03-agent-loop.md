@@ -25,7 +25,7 @@ tags:
 
 ## 0 · 阅读说明
 
-- 本章只讲当前发布的引擎：`Agent` 类和 `agentLoop()` 系列函数。第二章提到的 `harness/` 和 `pi-durable` 两套新引擎不在本章范围内。
+- 本章只讲当前发布的引擎：`Agent` 类和 `agentLoop()` 系列函数。第二章第 5 节提到的实验引擎不在本章范围内。
 - 文中的事件顺序都用一个探针脚本实际跑过。脚本用一个假的 `streamFn` 按剧本返回助手消息，订阅 `Agent` 的事件并记录钩子的调用时刻。本章引用的运行记录都来自这个脚本。
 - 后文说的"一轮"（turn），指一次模型请求加上这条回复里所有工具调用的执行，和 `turn_start` / `turn_end` 两个事件对应。
 
@@ -218,7 +218,7 @@ convertToLlm
 streamFn#1
 ```
 
-> 💡 `prepareRequest` 和 `transformContext` 都能改上下文，作用范围不同：`prepareRequest` 返回的上下文会替换循环里保存的那一份，影响之后的所有请求；`transformContext` 的结果只用于这一次请求，循环里保存的上下文不变。第二章讲过 coding-agent 怎么用它们：前者从会话树重新算出上下文，后者交给扩展的 `context` 事件。
+> 💡 `prepareRequest` 和 `transformContext` 都能改上下文，作用范围不同：`prepareRequest` 返回的上下文会替换循环里保存的那一份，影响之后的所有请求；`transformContext` 的结果只用于这一次请求，循环里保存的上下文不变。第二章讲过 coding-agent 怎么用它们：前者从会话树重新算出上下文，后者交给扩展的上下文事件（先是 `context`，再是 `context_with_system`）。
 
 > 📌 `convertToLlm` 要保留 `system` 消息。提示词和工具声明都放在 system 消息里，`Agent` 默认的转换函数会保留 `system`、`user`、`assistant`、`toolResult` 四种角色。自己写转换函数时，如果把 `system` 也过滤掉，模型就看不到提示词和工具声明了。
 
