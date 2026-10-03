@@ -8,7 +8,7 @@ tags:
   - 源码分析
 ---
 
-> **版本基线**：`earendil-works/pi` main 分支 `v0.99.2-23-g0c453048b`（2026-10-01），commit `0c453048b`。文中所有架构、数字和代码均以该版本源码为准。
+> **版本基线**：`earendil-works/pi` main 分支 `v1.0.0-25-ga276dabe5`（2026-10-03），commit `a276dabe5`。文中所有架构、数字和代码均以该版本源码为准。
 
 第一章画出了 Pi 的骨架：L1 `pi-ai` 调模型，L2 `pi-agent-core` 跑循环，L3 `pi-coding-agent` 做产品，依赖只朝下。本章接着往下讲，打开层与层之间的接口，看看这三层具体是怎么接起来的。
 
@@ -19,7 +19,7 @@ tags:
 - **规则靠 CI 守住**：每个公开包在运行时 import 的包，都必须写在自己的 `package.json` 依赖里，CI 会检查这一点。
 - **接口很窄**：coding-agent 自己的逻辑只用到 agent-core 的 3 个值；agent-core 的核心部分只借用 pi-ai 的纯函数，调模型这件事交给外部注入的函数。
 - **类型逐层加料，从不改下层**：工具、消息、事件三条类型线，各用一种扩展手法。
-- **L2 在演进**：除了现在发布的 `Agent`，同一个位置上还有三套新引擎在并行开发。它们同样遵守"只朝下依赖"。
+- **L2 在演进**：除了现在发布的 `Agent`，同一个位置上还有一套持久化引擎 `pi-durable` 在开发。它同样遵守"只朝下依赖"。
 
 ---
 
@@ -29,7 +29,7 @@ tags:
 
 第一章说过，下层不知道上层的存在。在代码里搜一遍可以确认：pi-ai 里找不到 agent-core 和 coding-agent，agent-core 里找不到 coding-agent，连类型导入都没有。
 
-这条规则由 CI 保证。根目录的 `npm run check` 串了九步检查，CI 和发布前都会运行，其中三步跟架构有关：
+这条规则由 CI 保证。根目录的 `npm run check` 串了八步检查，CI 和发布前都会运行，其中三步跟架构有关：
 
 - **runtime-deps（守方向）**：扫描每个公开包的源码，凡是运行时用到的 import，被导入的包都必须写在这个包的 `dependencies`、`peerDependencies` 或 `optionalDependencies` 里（开发依赖不算）。pi-ai 唯一的内部依赖是 `pi-telemetry`，所以它在运行时 import 不了 agent-core。
 - **entry-graphs（守入口体积）**：给重要的导出入口设预算。例如 pi-ai 的 `./models` 入口最多只能牵连 15 个文件，而且不能碰到供应商实现。脚本开头的注释是这样说的："Entry points are cost contracts"。
@@ -76,7 +76,7 @@ export const VIRTUAL_MODULES: Record<string, unknown> = {
 
 ### 2.2 L2 → L1：只借纯函数，不调模型
 
-agent-core 的核心部分（顶层几个文件，不含 `harness/` 目录）从 pi-ai 借用的都是不涉及网络的工具函数：
+agent-core 只有 6 个文件：`Agent`、循环、代理流和类型。它唯一的内部依赖是 pi-ai，借用的都是不涉及网络的工具函数：
 
 - `normalizeContext`（把系统提示词和工具列表折叠成开头的一条 system 消息，得到供应商能接收的上下文）
 - `validateToolArguments`（按工具的参数 schema 校验并修正模型给出的参数）
@@ -246,7 +246,7 @@ const agent = new Agent({
 
 - `streamFn`（模型调用函数）：交给 coding-agent 的模型运行时，它负责认证和自定义模型
 - `convertToLlm`（消息转换）：就是 3.2 节的转换函数，可以按设置屏蔽图片
-- `transformContext`（请求前改写上下文）：交给扩展的 `context` 事件
+- `transformContext`（请求前改写上下文）：交给扩展的上下文事件。先是 `context`，处理函数只看到对话消息，system 消息由 pi 还原；再是 `context_with_system`，处理函数看到含 system 消息的完整列表，返回值原样使用
 - `onPayload` / `onResponse` / `onProviderStreamEvent`（请求发出前、收到 HTTP 响应头时、收到供应商的原始流事件时）：分别交给扩展的 `before_provider_request`、`after_provider_response`、`provider_stream_event` 事件
 
 注意 `tools: []` 和 `systemPrompt: ""`：这时工具和提示词都还没定，要等扩展加载完才知道。
@@ -257,7 +257,7 @@ const agent = new Agent({
 |---|---|
 | `beforeToolCall` / `afterToolCall`（工具执行前 / 后） | 派发扩展的 `tool_call`（可拦截）和 `tool_result`（可改结果）事件 |
 | `prepareNextTurnWithContext`（下一轮开始前） | 需要时先压缩，再重建系统提示词和工具列表 |
-| `prepareRequest`（每次请求前） | 从会话树重新算出这次请求的上下文；超过阈值时先压缩 |
+| `prepareRequest`（每次请求前） | 从会话树重新算出这次请求的上下文；用的是虚拟模型时，先路由到具体模型，超过那个模型的阈值就先压缩 |
 | `finishTurn`（一轮结束时） | 派发扩展的 `turn_end` 事件，扩展可以要求继续跑 |
 | `transformContext`（再包两层） | 按工具 `prepareLoadout` 的要求隐藏部分工具声明；扩展在 `before_agent_start` 里返回了提示词时，用它替换整段系统提示词 |
 
@@ -277,22 +277,24 @@ this._emit(event.type === "agent_end" ? { ...event, willRetry: this._willRetryAf
 
 ---
 
-## 5 · L2 在演进：同一个位置上的多套实现
+## 5 · L2 在演进：另一套持久化引擎
 
-![图 5 · L2 的位置上现在有四套引擎](/images/harness/pi/ch02/fig5-engines.png)
+![图 5 · L2 的位置上现在有两套引擎](/images/harness/pi/ch02/fig5-engines.png)
 
-前面讲的都是现在发布出去的 `pi` 所用的引擎。在仓库里，L2 这个位置上还有三套新引擎在并行开发：
+前面讲的都是现在发布出去的 `pi` 所用的引擎。在仓库里，L2 这个位置上还有一套新引擎在开发：
 
-1. **`Agent`（当前发布的引擎）**：约 2.7k 行，就是前四节讲的内容。
-2. **`AgentHarness`（会话化的引擎接口）**：位于 agent-core 的 `harness/` 目录。这个目录里还有一套自己的会话存储、压缩，以及 bash/read/edit/write 工具。它已经从 agent-core 的根入口导出，目前由 coding-agent 实验目录里的 mini（拆成多进程的小型编码 Agent）等使用。
-3. **pico3**：同样在 `harness/` 目录下，约 8.1k 行，由实验目录里的 micro（单进程的小型编码 Agent）使用。
-4. **`pi-durable`（持久化引擎，规范里叫 Pico5）**：独立的包，约 17.7k 行。第一章把它归在实验区；从依赖关系看，它占的正是 L2 的位置。它的 README 是这样介绍的："Conversations, model turns, tool calls, and your own state are committed to storage before anything is shown." 也就是说，消息、模型输出、工具调用和你的状态，都先写入存储再展示。进程中途崩溃，重新打开就能接着跑。它的设计文档把 pico3 当作参考材料。
+1. **`Agent`（当前发布的引擎）**：agent-core 的 6 个文件，约 2.5k 行，就是前四节讲的内容。
+2. **`pi-durable`（持久化引擎，规范里叫 Pico5）**：独立的包，约 17.7k 行，已经发布到 npm，README 开头标着 "Experimental"（API 会在版本之间不经通知地变化）。README 是这样介绍它的："Conversations, model turns, tool calls, and your own state are committed to storage before anything is shown." 也就是说，消息、模型输出、工具调用和你的状态，都先写入存储再展示。进程中途崩溃，重新打开就能接着跑。
 
-这四套引擎有一个共同点：**都只往下依赖 pi-ai，没有一套依赖 coding-agent**。三层结构对它们同样成立，在变的只是 L2 的实现。其中 `pi-durable` 甚至不依赖 agent-core，内部依赖只有 pi-ai 和 `chord`（第一章提到的基础库）。
+两套引擎有一个共同点：**都只往下依赖 pi-ai，都不依赖 coding-agent**。三层结构对它们同样成立，在变的只是 L2 的实现。`pi-durable` 也不依赖 agent-core，内部依赖只有 pi-ai 和 `chord`（第一章提到的基础库）。
 
-从 2026-08-01 到 2026-10-01 的提交可以看出开发重心在哪里：`agent-loop.ts` 有 9 次提交，`harness/` 有 235 次，`pi-durable` 从 2026-09-18 创建以来有 76 次。2026-10-01 新增的提交还在 coding-agent 的实验目录里，用 `pi-durable` 搭了一个能用的终端编码 Agent。
+从 2026-08-01 到 2026-10-03 的提交可以看出开发重心在哪里：`agent-loop.ts` 只有 9 次提交，`pi-durable` 从 2026-09-18 创建以来有 77 次（含 2 次发版提交）。coding-agent 的实验目录里已经有三处在用它：
 
-实验代码不会影响 npm 用户：coding-agent 发布时排除了 `experimental/` 目录，所以安装的 `pi` 只跑第一套引擎。agent-core 则会把 `harness/` 一起发布。
+- `experimental/durable`：单进程的终端编码 Agent
+- 实验性 server / client 的会话 worker：每个会话一个 `pi-durable` 实例
+- `experimental/vacation`：一个示例
+
+实验代码不会影响 npm 用户：coding-agent 发布时排除了 `experimental/` 目录，也没有把 `pi-durable` 列为依赖，所以安装的 `pi` 只跑 `Agent` 这一套引擎。
 
 > 💡 这种演进方式本身就得益于分层：新引擎只要满足"往下依赖 pi-ai、往上接 coding-agent"，就能在实验目录里和现有引擎并行开发，不用动已发布的路径。本系列接下来的 Agent Loop、工具、事件章节讲的是当前发布的 `Agent`；新引擎稳定之后再单独成章。
 
@@ -349,11 +351,11 @@ export const agent = new Agent({
 | coding-agent 自身从 agent-core 导入的运行时值 | 3 个，另有 1 处整包导入交给扩展 |
 | coding-agent 中运行时直接导入 pi-ai 的文件（不含实验目录） | 26 个 |
 | 反向依赖（包括类型导入） | 0 |
-| `npm run check` | 9 步，其中 3 步与架构有关 |
+| `npm run check` | 8 步，其中 3 步与架构有关 |
 | coding-agent 里引擎流转的消息种类 | 8 种（pi-ai 4 种 + 扩展 4 种） |
 | 事件种类 | L1 12 种 → L2 10 种 → L3 新增 13 种 |
 | AgentSession 构造时调用的钩子安装方法 | 6 个 |
-| L2 位置上的引擎 | 4 套（1 套已发布，3 套在实验代码中开发） |
+| L2 位置上的引擎 | 2 套（`Agent` 稳定发布；`pi-durable` 标为 Experimental，只有实验代码在用） |
 
 ---
 
@@ -367,7 +369,7 @@ export const agent = new Agent({
 | **`transformContext`** | 在 `convertToLlm` 之前运行，改写引擎消息列表，例如裁剪历史、注入上下文 |
 | **`wrapToolDefinition`** | 把 L3 的工具定义转成 L2 能执行的工具，丢掉提示词和渲染字段 |
 | **虚拟模块** | 扩展 import pi 的包时，解析到 coding-agent 自带的那一份 |
-| **AgentHarness / pi-durable** | L2 位置上正在开发的新引擎；pi-durable 先写入存储再展示，崩溃后能接着跑 |
+| **pi-durable** | L2 位置上的实验性持久化引擎；先写入存储再展示，崩溃后能接着跑 |
 
 ---
 
@@ -382,7 +384,7 @@ export const agent = new Agent({
 | 工具类型怎么转换 | `packages/coding-agent/src/core/tools/tool-definition-wrapper.ts` |
 | 自定义消息怎么转换 | `packages/coding-agent/src/core/messages.ts` → `convertToLlm` |
 | 引擎的请求顺序 | `packages/agent/src/agent-loop.ts` → `streamAssistantResponse` |
-| 三条类型线的定义 | `packages/ai/src/types.ts`；`packages/agent/src/types.ts`；`packages/coding-agent/src/core/extensions/types.ts` |
-| 新引擎 | `packages/agent/src/harness/`；`packages/durable/README.md`；`packages/durable/docs/pico-v5.md` |
+| 三条类型线的定义 | `packages/ai/src/types.ts`；`packages/agent/src/types.ts`；`packages/coding-agent/src/core/extensions/types.ts`（`ToolDefinition`）；`packages/coding-agent/src/core/agent-session.ts`（`AgentSessionEvent`）；`packages/coding-agent/src/core/messages.ts`（声明合并） |
+| 新引擎 | `packages/durable/README.md`；`packages/durable/docs/spec.md`；`packages/coding-agent/src/experimental/durable/` |
 
 **下一章**：深入当前发布的引擎，看 `agent-loop.ts` 的双层循环、插队消息与后续消息，以及工具的串行与并行执行。
