@@ -278,7 +278,7 @@ SDK 文档也写明了这一点：直接给 `session.agent.state.messages` 赋�
 
 ### 5.3 失败的尝试被编辑掉，而不是删掉
 
-供应商返回可重试的错误时（过载、限流之类），出错的 assistant 消息已经在 `message_end` 时写进了会话。`_omitRecoveryAttempt`（隐藏一次失败的尝试）给这条消息追加一条 `replacement: null` 的 `context_edit`，再刷新状态。上下文超长、需要压缩后再试时也这样处理，这时连同这条回复产生的工具结果一起隐藏。
+供应商返回可重试的错误时（过载、限流之类），出错的 assistant 消息已经在 `message_end` 时写进了会话。`_omitRecoveryAttempt`（隐藏一次失败的尝试）给这条消息追加一条 `replacement: null` 的 `context_edit`，再刷新状态。上下文超长或回复被截断（`length`）、需要压缩后再试时也这样处理，这时连同这条回复产生的工具结果一起隐藏（第七章 1.4 节）。
 
 结果是：
 

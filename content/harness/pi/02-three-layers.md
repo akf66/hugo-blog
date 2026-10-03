@@ -116,7 +116,7 @@ const response = await streamFunction(config.model, llmContext, {
 
 依赖规则只要求单向，上层可以直接使用任意下层。不算实验目录，coding-agent 有 26 个文件在运行时直接导入 pi-ai，例如：
 
-- 生成压缩摘要时直接发一次请求、等完整回复。默认用 `Agent` 的 `streamFn` 发请求再取结果，没有传入时就用 pi-ai 的 `completeSimple`（发一次请求，等完整回复）。摘要不需要工具、循环和事件，所以不经过 `Agent` 的循环。
+- 生成压缩摘要时直接发一次请求、等完整回复。压缩函数优先用传入的 `streamFn` 发请求再取结果，没有传入时才用 pi-ai 的 `completeSimple`（发一次请求，等完整回复）；`AgentSession` 总是传入 `Agent` 的 `streamFunction`，所以产品里的摘要请求都走 `streamFn`。摘要不需要工具、循环和事件，所以不经过 `Agent` 的循环。
 - 自动重试时用 `retryDelayMs`（按重试次数算出退避等待时间）。
 - 选择推理强度时用 `clampThinkingLevel`（把用户要的推理强度调整到模型实际支持的档位）。
 
