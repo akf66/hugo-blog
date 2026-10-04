@@ -80,13 +80,17 @@ $post-radius: 10px;
   width: 100%;
 }
 
+// 用 break-word 而不是 anywhere：anywhere 会把列的最小宽度算成一个字符，
+// 某一列很长时其他列被压到一个字宽，英文和行内代码被逐字拆开、中文短词变成竖排。
+// break-word 只在一个词放不下整行时才拆，列宽不会被压到一个字。
 .article-entry table td,
 .article-entry table th {
   white-space: normal;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  min-width: 4.5em;
 }
 
 .article-entry table td code {
   white-space: normal;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
