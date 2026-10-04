@@ -327,6 +327,7 @@ SDK 文档也写明了这一点：直接给 `session.agent.state.messages` 赋�
 几点补充：
 
 - `ReadonlySessionManager` 只在类型上只读，运行时拿到的就是同一个 `SessionManager` 对象。扩展要写会话，应该通过上面列出的 API。
+- `pi.appendEntry(customType, data)` 不复制 `data`，条目在内存里保存的是这个对象本身。会话文件还没创建时（2.3 节），条目要等第一条 assistant 消息出现才序列化，之后对 `data` 的修改会一起写进文件；文件已经存在时立即序列化，但内存里的条目仍跟着变，`getBranch()` 读到的是改过的值。要保存某一时刻的状态，传 `structuredClone(data)`。
 - 会话列表（`SessionManager.list`）里的名字、消息数、第一条消息，统计的是整个文件，不区分分支。
 - RPC 模式提供 `get_entries`、`get_tree`、`fork`、`clone`、`switch_session`、`new_session` 等命令，但没有直接的分支导航命令。
 

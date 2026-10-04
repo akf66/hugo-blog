@@ -32,7 +32,7 @@ tags:
   - 第五章 3 节：system 消息上的 `sections`、`toolsAdded`、`toolsRemoved`，工具声明的三种发法；7.3 节的 `tool_search`。
   - 第六章 2.1 节：system 消息作为普通 `message` 条目存进会话；4.2 节：压缩条目里的检查点代替之前所有 system 消息；5.1 节：每次请求前从会话树重新投影。
   - 第七章 3.4 节：摘要请求用 `cacheRetention: "none"`，不触发缓存预热。
-- 文中的行为都用探针实际跑过。探针用 npm 上的 1.0.1，用 `createAgentSession` 加 pi-ai 的 faux 供应商（从 `@earendil-works/pi-ai/compat` 导入 `registerFauxProvider`、`fauxAssistantMessage`），在临时目录里放几层 AGENTS.md、技能和提示词模板，把 `HOME` 也指向临时目录，记录每次发给模型的消息列表和会话文件。faux 的每个回复都用工厂函数在请求到达时才创建。faux 不触发 `before_provider_request`，所以涉及请求体的探针（P4）改用本地 mock 服务模拟 Anthropic 的流式接口。探针编号 P1–P8。
+- 文中的行为都用探针实际跑过。探针用 npm 上的 1.0.1，用 `createAgentSession` 加 pi-ai 的 faux 供应商（从 `@earendil-works/pi-ai/compat` 导入 `registerFauxProvider`、`fauxAssistantMessage`），在临时目录里放几层 AGENTS.md、技能和提示词模板，把 `HOME` 也指向临时目录，记录每次发给模型的消息列表和会话文件。faux 的每个回复都用工厂函数在请求到达时才创建。faux 不触发 `before_provider_request`（`before_provider_headers` 和 `after_provider_response` 照常触发），所以涉及请求体的探针（P4）改用本地 mock 服务模拟 Anthropic 的流式接口。探针编号 P1–P8。
 - 术语：
   - **段**：`SystemMessage.sections` 里的一项，键是段名，值是包好标签的文字。
   - **补丁**：对话中途的 system 消息，只带变了的段和工具增减。
@@ -366,6 +366,8 @@ Review src/a b.ts with focus on perf. All args: src/a b.ts perf extra
 
 1. **每次 prompt**：`before_agent_start` 处理完之后，用它改过的选项计算。这份选项存为运行级选项 `_runSystemPromptOptions`，补丁插在本次新消息的最前面。
 2. **同一次运行的后续每一轮**：`AgentSession` 包在 `prepareNextTurnWithContext` 外面的那层，取运行级选项，把 `selectedTools` 换成当前激活的工具，再算一次，补丁作为这一轮的新消息交给循环。
+
+> ⚠️ 扩展用 `pi.sendMessage(message, { triggerTurn: true })` 在空闲时启动的运行不走 `prompt()`：不触发 `input` 和 `before_agent_start`，也不经过第一个时机，消息直接交给 `Agent`。会话里已经有提示词时，这次请求照常从会话树投影出提示词；在全新的会话上第一个动作就是它时，这次请求只带一条文字为空的 system 消息（只有工具声明），没有系统提示词，要等之后一次正常的 prompt 才把完整的段作为补丁写进来（第九章 3.3 节的探针 P6b）。需要提示词和 `before_agent_start` 的场景，用 `pi.sendUserMessage`。
 
 `_preparePromptAndToolLoadout` 做三件事：
 

@@ -8,7 +8,7 @@ tags:
   - 源码分析
 ---
 
-> **版本基线**：`earendil-works/pi` v1.0.1（2026-10-03），commit `a7229ddc2`。文中所有行为、数字和代码均以该版本为准。
+> **版本基线**：`earendil-works/pi` v1.0.2-1-g200387122（2026-10-04），commit `200387122`。这个提交在 v1.0.2 之上只给各包的 CHANGELOG 加了 `[Unreleased]` 段，代码与 v1.0.2 相同。文中所有行为、数字和代码均以该版本为准。
 
 第三章讲到，`runLoop` 每一轮把消息交给 `streamFn`，然后消费它返回的事件流。本章接着往下讲，打开 L1 的 pi-ai，从 `streamFn` 被调用开始，一直讲到供应商的原始流变成统一的事件。
 
@@ -27,7 +27,7 @@ tags:
 ## 0 · 阅读说明
 
 - 本章只讲已发布的 pi-ai（`@earendil-works/pi-ai`），而且只讲对话模型的流式请求。图像生成、分类模型、延迟返回（deferred）这几条支线只在需要时提一句。
-- 文中的事件顺序、错误信息和计数都用探针脚本实际跑过。探针在本地起一个假的 HTTP 服务，按 Anthropic 和 OpenAI 的格式返回 SSE 流，再把模型的 `baseUrl` 指向它，不需要真实的 API key。脚本用的是 npm 上的 `@earendil-works/pi-ai@1.0.1`，和基线是同一个版本。
+- 文中的事件顺序、错误信息和计数都用探针脚本实际跑过。探针在本地起一个假的 HTTP 服务，按 Anthropic 和 OpenAI 的格式返回 SSE 流，再把模型的 `baseUrl` 指向它，不需要真实的 API key。脚本用的是 npm 上的 `@earendil-works/pi-ai@1.0.2`，和基线是同一个版本。
 - 本章的术语：
   - **供应商**（provider）：一个运行时单元，带着自己的 id、凭据规则、模型目录和请求方法，例如 `anthropic`、`deepseek`。
   - **线协议**（api）：和模型服务通信的请求、响应格式，例如 `anthropic-messages`、`openai-completions`。
@@ -181,7 +181,7 @@ export function lazyStream(
 
 供应商把请求交给协议实现。如果这是第一次请求这种线协议，会先加载协议实现的模块（第 6 节）。以 `anthropic-messages` 为例，`streamSimple` 先换算选项：
 
-- `buildBaseOptions`（复制通用选项，并把 `maxTokens` 夹紧到上下文窗口减去估算的输入 token、再留 4096 的余量）
+- `buildBaseOptions`（复制通用选项，并把 `maxTokens` 夹紧到上下文窗口减去估算的输入 token、再留 4096 的余量）。它还按思考级别合并采样参数：模型的 `samplingParams`、模型 `samplingParamsByThinkingLevel` 里对应级别（按模型支持的级别夹紧后）的那一组、请求的 `samplingParams`，后面的逐键覆盖前面的。只有 OpenAI 兼容的三种协议实现（`openai-completions`、`openai-responses`、`azure-openai-responses`）把这些参数写进请求体，其他协议忽略它们。coding-agent 的 `models.json` 可以给模型配 `samplingParamsByThinkingLevel`
 - 没有 `reasoning`：`thinkingEnabled: false`
 - 模型声明了自适应思考：`reasoning` 映射成 `effort`（`minimal` 和 `low` 都映射成 `low`）
 - 其他模型：按默认预算表取思考 token 数（`minimal` 1024、`low` 2048、`medium` 8192、`high` 16384），给回答至少留 1024 个 token
@@ -522,7 +522,7 @@ const agent = new Agent({
 | 请求级重试的默认次数 | 0 |
 | `maxRetryDelayMs` 默认值 | 60 秒 |
 | OAuth 提前刷新窗口 | 5 分钟 |
-| `src/api/` | 39 个文件，12,859 行 |
+| `src/api/` | 39 个文件，12,891 行 |
 | `packages/ai` 的提交（北京时间 2026-08-01 至 2026-10-01，不含合并提交） | 246 次，其中 `src/api/` 82 次 |
 
 图像生成另有 1 种线协议，分类模型另有 3 种，不算在 10 种里。
