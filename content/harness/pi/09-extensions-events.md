@@ -594,11 +594,14 @@ B 在 `message_end` 里返回了一条 role 为 `user` 的消息，被拒绝并�
 
 **`ctx.ui` 在各模式下的行为**：
 
-| 模式 | `mode` | `hasUI` | `ui` 的行为 |
-|---|---|---|---|
-| 交互 | `tui` | true | 完整的终端界面：对话框、通知、状态栏、组件 |
-| RPC | `rpc` | true | `select`、`confirm`、`input`、`editor` 作为 `extension_ui_request` 发给客户端并等待回复；`notify`、`setStatus`、`setWidget`（只转发字符串数组）、`setTitle`、`setEditorText` / `pasteToEditor`（`set_editor_text`）单向发送；`custom` 和自定义组件是空操作 |
-| print / JSON | `print` / `json` | false | 交互和显示都是空操作：`select`、`input`、`editor` 返回 `undefined`，`confirm` 返回 `false`，`getEditorText` 返回空串，`setTheme` 返回 `{ success: false, error: "UI not available" }`；`theme` 仍返回当前主题 |
+- **交互模式**（`mode` 为 `tui`，`hasUI` 为 true）：完整的终端界面，对话框、通知、状态栏、组件都可用。
+- **RPC 模式**（`mode` 为 `rpc`，`hasUI` 为 true）：
+  - `select`、`confirm`、`input`、`editor` 作为 `extension_ui_request` 发给客户端，等客户端回复。
+  - `notify`、`setStatus`、`setWidget`（只转发字符串数组）、`setTitle`、`setEditorText` / `pasteToEditor`（发 `set_editor_text`）单向发送。
+  - `custom` 和自定义组件是空操作。
+- **print / JSON 模式**（`mode` 为 `print` / `json`，`hasUI` 为 false）：交互和显示都是空操作。
+  - `select`、`input`、`editor` 返回 `undefined`，`confirm` 返回 `false`，`getEditorText` 返回空串。
+  - `setTheme` 返回 `{ success: false, error: "UI not available" }`；`theme` 仍返回当前主题。
 
 SDK 不传 `uiContext` 时和 print 模式一样（P5：`hasUI=false mode=print select=undefined confirm=false`）。只在终端里有意义的功能用 `ctx.mode === "tui"` 判断，需要用户回答的交互用 `ctx.hasUI` 判断。
 
