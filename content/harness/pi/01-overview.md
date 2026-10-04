@@ -314,7 +314,7 @@ pi-tui 不在堆栈链上：主要由交互模式使用（扩展和工具渲染�
 └── settings.json  mcp.json  SYSTEM.md  APPEND_SYSTEM.md  extensions/  skills/  prompts/  themes/
 ```
 
-上下文文件：每个目录只取下面几个中的第一个匹配项：`AGENTS.override.md` → `AGENTS.md` → `CLAUDE.md`。
+上下文文件：每个目录只取下面几个中的第一个匹配项：`AGENTS.override.md` → `AGENTS.md` → `AGENTS.MD` → `CLAUDE.md` → `CLAUDE.MD`。
 
 ---
 
@@ -369,7 +369,7 @@ Pi 的核心刻意保持很小。官方 README 的说法是 "Pi ships with power
 | `agent-loop.ts` | 约 940 行 |
 | `agent-session.ts` | 约 4300 行 |
 | pi-tui 源码 | 约 1.9 万行 |
-| 系统提示词静态模板 | 约 200 个英文词（运行时再拼接工具说明、上下文文件、Skills） |
+| 默认系统提示词 | 约 370 个英文词（4 个默认工具，不含上下文文件和 Skills；这两部分运行时再拼接） |
 | 运行模式 | 4 种（交互 · Print/JSON · RPC · SDK） |
 | 官方扩展示例 | 70 个顶层 `.ts` + 9 个子目录 |
 
