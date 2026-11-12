@@ -2,7 +2,6 @@
 title: "Codex Security 02 · 先定义要防什么：SECURITY.md 与威胁建模"
 date: 2026-11-12T09:10:00+08:00
 description: "找漏洞之前，先说清楚什么算漏洞。本章讲 Codex Security 流水线的起点：define-security-policy 怎样写一份给审查者看的 SECURITY.md，threat-model 怎样梳理资产、攻击者、信任边界和威胁场景，threat-model-visualize 对画架构图提出了哪些规矩。全章用一个虚构的多租户笔记服务 notes-api 做例子，写出它的 SECURITY.md 和威胁模型，第三章的漏洞就从这里的场景里来。"
-mermaid: true
 tags:
   - Harness
   - Codex
@@ -77,12 +76,7 @@ Codex Security 把这件事放在流水线的最前面：先用 `SECURITY.md` �
 
 （解析器把从扫描根目录到目标所在目录路径上每一个非空的 `SECURITY.md` 按从根到叶的顺序拼接。一个 `SECURITY.md` 适用于它所在的目录及所有子目录。策略冲突时，离目标最近的优先。）
 
-```mermaid
-flowchart TD
-    R["/SECURITY.md<br/>整个服务：租户隔离、出站请求限制"] --> A["/internal/admin/SECURITY.md<br/>管理后台：运维人员受信任，但仍需鉴权"]
-    R --> E["/examples/SECURITY.md<br/>示例代码：用户会照抄，按示例自身的边界评估"]
-    A --> F["审查 internal/admin/users.go 时<br/>生效的策略 = 根 + admin，冲突以 admin 为准"]
-```
+![图 1 · SECURITY.md 按目录从根到叶拼接，冲突时离代码最近的优先](/images/harness/codex/ch02/fig1-policy-chain.png)
 
 所以审查整个仓库时，要先盘点嵌套的策略，`define-security-policy` 原文是"以免遗漏组件特定的边界"。
 
@@ -292,6 +286,10 @@ examples/（客户会照抄示例里的 Webhook 验签代码）。
 
 例子：notes-api 的用户能删除自己的笔记，这不是漏洞；用户能删除别人的笔记，才是。管理员能修改全局配置，不是漏洞；普通用户能修改，才是。
 
+图 2 用第 5.2 节的 S3 把六个要素填了一遍。
+
+![图 2 · 一个威胁场景的六个要素：第六格回答“控制失效后，攻击者多得到了什么”](/images/harness/codex/ch02/fig2-scenario-anatomy.png)
+
 还有几条关于优先级和措辞的规则：
 
 - 按可能的影响和可达性排序。"A caller-controlled library or parser input can establish a boundary without evidence of an observed production deployment."——一个库的解析函数接受调用方输入，本身就构成边界，不需要先证明有人在生产里这么用。
@@ -322,38 +320,7 @@ examples/（客户会照抄示例里的 Webhook 验签代码）。
 
 ### 5.1 信任边界
 
-```mermaid
-flowchart LR
-    subgraph Internet["互联网（不可信）"]
-        U["注册用户<br/>可自建租户"]
-        X["未登录用户"]
-        W["任意网站<br/>预览抓取的目标"]
-    end
-    subgraph Svc["notes-api 进程"]
-        AUTH["鉴权中间件<br/>令牌 → Principal"]
-        H["Handler<br/>笔记 / 附件 / 预览 / 导出"]
-        ADM["admin 路由<br/>SSO + 管理员角色"]
-        Q["配额服务客户端"]
-    end
-    subgraph Internal["内网（受信任）"]
-        DB[("PostgreSQL<br/>notes, attachments")]
-        FS[("附件存储<br/>/srv/attachments/租户ID/")]
-        META["云元数据服务<br/>169.254.169.254"]
-    end
-    OPS["平台运维人员<br/>（受信任）"]
-
-    U -->|"HTTPS 请求"| AUTH
-    X -->|"HTTPS 请求"| AUTH
-    AUTH --> H
-    OPS -->|"SSO"| ADM
-    H --> DB
-    H --> FS
-    H --> Q
-    H -->|"出站抓取"| W
-    H -.->|"不应可达"| META
-```
-
-三条边界：租户之间（同在 `notes` 表和 `/srv/attachments/` 下，靠代码隔离）；普通用户与管理员之间；服务进程与内网之间（预览抓取是唯一由用户决定目标的出站请求）。
+![图 3 · notes-api 的三条信任边界：租户之间、普通用户与管理员之间、服务与内网之间](/images/harness/codex/ch02/fig3-trust-boundaries.png)
 
 ### 5.2 威胁场景
 

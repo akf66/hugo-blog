@@ -2,7 +2,6 @@
 title: "Codex Security 01 · 总览：一套写给 Agent 的安全审查规程，人能从中学什么"
 date: 2026-11-12T09:00:00+08:00
 description: "Codex Security 是 OpenAI 给 Codex 做的安全审查插件，核心是 20 个技能文档。它们写给 Agent 执行，但内容其实是一套完整的安全审查方法：先定义要防什么，再从入口追到汇点找漏洞，然后验证、定级、修复、复核。本章介绍这 20 个技能怎样串成一条流水线，以及贯穿其中的八条原则，后面六章按阶段逐个拆解。"
-mermaid: true
 tags:
   - Harness
   - Codex
@@ -75,20 +74,7 @@ Codex Security 是 OpenAI 为 Codex 做的安全审查插件。装上之后，�
 
 ### 2.1 主线
 
-```mermaid
-flowchart LR
-    P["define-security-policy<br/>SECURITY.md"] --> T["threat-model<br/>威胁模型"]
-    T --> D["finding-discovery<br/>发现候选项"]
-    D --> V["validation<br/>验证"]
-    V --> A["attack-path-analysis<br/>攻击路径与定级"]
-    A --> R["报告<br/>findings + report.md"]
-    R --> F["fix-finding<br/>修复"]
-    F --> VF["verify-fix<br/>复核修复"]
-    F --> PR["assess-patch-risk<br/>补丁风险"]
-    R --> H["propose-security-hardening<br/>结构性加固"]
-    R --> W["vulnerability-writeup<br/>漏洞报告"]
-    R --> TR["track-findings<br/>建工单"]
-```
+![图 1 · 20 个技能怎样串成一条流水线](/images/harness/codex/ch01/fig1-pipeline.png)
 
 用户通常不会一个个手动调用这些阶段技能，而是从三个扫描入口之一开始：
 
@@ -144,14 +130,9 @@ flowchart LR
 > - counterevidence: static facts that weaken, defeat, or scope the claim
 > - proof gaps: missing facts that prevent a stronger conclusion
 
-翻译过来：**来源**（攻击者能控制什么）、**控制**（哪个检查本该挡住它）、**汇点**（危害在哪发生）、**可达路径**（三者之间的代码路径和前提条件）、**边界**（为什么这条路径跨越了信任边界）、**反证**、**证明缺口**。
+翻译过来：**来源**（攻击者能控制什么）、**控制**（哪个检查本该挡住它）、**汇点**（危害在哪发生）、**可达路径**（三者之间的代码路径和前提条件）、**边界**（为什么这条路径跨越了信任边界）、**反证**、**证明缺口**。图 2 用第三章的 C1 把七项填了一遍。
 
-```mermaid
-flowchart LR
-    S["source<br/>攻击者可控的输入"] --> C["control<br/>鉴权 / 校验 / 转义"]
-    C -->|"缺失、可绕过、<br/>检查了错的值"| K["sink<br/>SQL / 文件 / 网络 / 返回数据"]
-    K --> I["impact<br/>跨越了哪条边界"]
-```
+![图 2 · 发现项是一条完整的证据链](/images/harness/codex/ch01/fig2-evidence-chain.png)
 
 同一份文档紧接着说：
 
@@ -174,6 +155,8 @@ flowchart LR
 - **也不能因为没证据就说有漏洞**。`attack-path-analysis`："不要编造没有证据支持的攻击链。"`vulnerability-writeup`："不要为了填补空白而编造摘录、行号、观察结果或身份。"
 
 中间状态有专门的名字：验证阶段叫 `deferred`，分诊叫 `needs_review`，修复叫 `blocked`，复核修复叫 `inconclusive`。它们的共同要求是**指出会改变结论的最小事实**。`triage-finding` 原文："指出会改变判定的最小事实。"
+
+![图 3 · 每个技能都留了一个中间状态](/images/harness/codex/ch01/fig3-proof-gaps.png)
 
 **对开发者**："我没看出问题"和"我确认没问题"是两句话。审查意见里把"没覆盖到的"写出来，比给一个笼统的 LGTM 有用得多。
 

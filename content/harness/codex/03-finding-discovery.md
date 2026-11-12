@@ -2,7 +2,6 @@
 title: "Codex Security 03 · 找漏洞：从入口追到汇点"
 date: 2026-11-12T09:20:00+08:00
 description: "Codex Security 怎样在源码里找漏洞：标准扫描同时跑一个不带任何假设的独立基线审计和一组按威胁模型分组的专项调查，候选项要写清 source、control、sink 和反证才能交给验证。本章逐条讲基线审计的检查清单、专项调查员的追踪技巧、发现阶段的证据标准和源码密钥的判断方法，用 notes-api 里的五个候选漏洞做示例，最后讲怎样把 diff 扫描的规则用到日常 Code Review。"
-mermaid: true
 tags:
   - Harness
   - Codex
@@ -93,19 +92,9 @@ type Server struct {
 
 ### 2.1 八个步骤
 
-`core-scan.md` 的 Core Workflow 有八步，画出来是这样：
+`core-scan.md` 的 Core Workflow 有八步，见图 1。
 
-```mermaid
-flowchart TD
-    S1["1 确定目标、范围<br/>继承的 SECURITY.md、用户上下文、威胁模型"] --> S2["2 启动独立基线审计员<br/>fork_turns: none，不给父级假设"]
-    S1 --> S3["3 读 threat-model.md<br/>梳理架构和安全边界"]
-    S3 --> S4["4 把问题分组成调查包<br/>按攻击者、资产、入口、预期控制、敏感操作"]
-    S4 --> S5["5 专项调查员并行调查<br/>读 focused-investigator.md"]
-    S2 --> S6["6 候选项先存检查点<br/>包括被拒的和反证"]
-    S5 --> S6
-    S6 --> S7["7 逐个验证不同的候选项"]
-    S7 --> S8["8 汇总 scope / threatModel / findings / reviewState"]
-```
+![图 1 · 标准扫描的八步：独立基线和威胁模型驱动的调查并行，在检查点汇合](/images/harness/codex/ch03/fig1-core-scan.png)
 
 第 2 步对基线审计员的要求很严格：
 
@@ -254,15 +243,9 @@ func (s *Server) DownloadAttachment(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-把检查的值和使用的值并排写出来：
+图 2 把检查的值和使用的值按顺序排了出来。守卫看的是 `raw`，`ServeFile` 打开的是 `full`，中间隔着一次解码和一次路径规整。这些值都来自我写的测试：第一步的值能通过检查，最后一步落在另一个租户的目录下。
 
-| 步骤 | 值（租户 `t1` 的用户请求 `?path=t1/%252e%252e/t2/contract.pdf`） |
-|---|---|
-| `Query().Get` 之后的 `raw`（守卫检查的值） | `t1/%2e%2e/t2/contract.pdf`：前缀是 `t1/`，不含 `..`，通过 |
-| `PathUnescape` 之后的 `name` | `t1/../t2/contract.pdf` |
-| `Join` 之后的 `full`（汇点使用的值） | `/srv/attachments/t2/contract.pdf`：租户 `t2` 的文件 |
-
-守卫看的是 `raw`，`ServeFile` 打开的是 `full`，中间隔着一次解码和一次路径规整。我把这个例子写成了测试，确认第一行的值能通过检查、最后一行落在另一个租户的目录下。
+![图 2 · C2：守卫检查的是 raw，ServeFile 打开的是两步之后的 full](/images/harness/codex/ch03/fig2-c2-values.png)
 
 这里还有一个容易被当成反证的东西：`http.ServeFile` 的文档说它会拒绝 `r.URL.Path` 含 `..` 的请求。但它检查的是**请求路径**（这里是 `/attachments`），不是传给它的 `name` 参数。一个真实存在的控制，检查的却是另一个值，不能算反证。这正是 `finding-discovery` 证据标准里说的"被应用到了错误的值或边界上"。
 
@@ -381,14 +364,9 @@ func (s *Server) UploadAttachment(w http.ResponseWriter, r *http.Request) {
 
 修法是把顺序倒过来：先查归属，再用 `http.MaxBytesReader` 限制大小、按 `Content-Length` 或上限预扣配额，最后才写盘。
 
-### 4.5 一张对照表
+### 4.5 四个候选项放在一起看
 
-| 技巧 | 示例 | 守卫检查的 | 汇点实际使用的 |
-|---|---|---|---|
-| 查兄弟操作 | C1 | `GetNote` 里的租户和归属 | `DeleteNote` 里只有 id |
-| 比对检查值和使用值，追踪解码 | C2 | 解码一次后的 `raw` | 解码两次、规整后的 `full` |
-| 追踪重定向和目标选择 | C3 | 第一次解析出的 IP | 拨号时重新解析的 IP、重定向后的地址 |
-| 检查在第一个副作用之前 | C4 | 写盘之后的配额和归属 | 写盘时没有任何限制 |
+![图 3 · 四个候选项的共同点：守卫检查的，不是汇点实际使用的](/images/harness/codex/ch03/fig3-checked-vs-used.png)
 
 ---
 
@@ -559,15 +537,9 @@ var docExampleCreds = struct {
  }
 ```
 
-只看 diff 本身，能看出 `HasSuffix` 会接受 `evilnotes.example.com`（我把这个也写进了测试）。但 diff 审查的要求是继续追：这个函数被谁调用？在 notes-api 里搜一下，调用方有三个：
+只看 diff 本身，能看出 `HasSuffix` 会接受 `evilnotes.example.com`（我把这个也写进了测试）。但 diff 审查的要求是继续追：这个函数被谁调用？在 notes-api 里搜一下，调用方有三个。同一个改动，在前两个调用方是中低危的开放重定向，在 OAuth 回调里可能是账户接管，见图 4。
 
-| 调用方 | 用途 | 改动后的影响 |
-|---|---|---|
-| 登录后的 `?next=` 跳转 | 把浏览器送到 `next` 指定的页面 | 开放重定向，可用于钓鱼 |
-| 登出后的跳转 | 同上 | 同上 |
-| OAuth 回调 | 决定把带授权码的回调发到哪个地址 | 授权码被发到攻击者注册的 `evilnotes.example.com`，可能导致账户被接管 |
-
-同一个改动，在前两个调用方是中低危的开放重定向，在第三个调用方可能是账户接管。只看 diff、不看调用方，会严重低估它。
+![图 4 · 改一个共享控制，要按调用方逐个评估：同一行改动在 OAuth 回调里可能是账户接管](/images/harness/codex/ch03/fig4-diff-callers.png)
 
 **例子二：删掉了一个中间件文件。** PR 的描述是"清理不用的代码"，删除了 `internal/http/middleware/tenant_scope.go`，同时在 `routes.go` 里去掉了一行 `r.Use(middleware.TenantScope)`。
 
