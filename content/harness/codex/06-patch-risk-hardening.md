@@ -2,7 +2,6 @@
 title: "Codex Security 06 · 补丁风险、依赖告警与结构性加固"
 date: 2026-11-12T09:50:00+08:00
 description: "修复写完之后还有三个问题：这个补丁合进去会不会弄坏别的东西，依赖里报出来的漏洞到底要不要升级、怎么升级，同一类漏洞反复出现时该不该改设计。本章拆解 assess-patch-risk、resolve-dependency-alert 和 propose-security-hardening 三个技能，并用 notes-api 演练一次补丁风险评估和一次结构性加固提案。"
-mermaid: true
 tags:
   - Harness
   - Codex
@@ -87,6 +86,10 @@ tags:
 - 能马上查清的未知项立刻查。仍有决策关键的未知项时返回 `hold_for_evidence`，并且"按 schema 要求给出最多三个后续行动、每个行动寻求的证据，以及可能的结果会如何改变建议。不要无限期地等待或轮询。"
 
 ### 1.3 五个维度的评级
+
+五个维度的等级刻度和 1.5 节的自动合并门槛见图 1。
+
+![图 1 · 补丁风险的五个维度与自动合并门槛](/images/harness/codex/ch06/fig1-five-dimensions.png)
 
 `references/risk-rubric.md` 给每个维度定了等级。下表按原文逐条整理，没有删减：
 
@@ -233,6 +236,8 @@ PR 描述写着"纯性能优化，不改变行为，单元测试全部通过"。
 | 合法对照 | alice 删除自己的笔记仍然成功；mallory 删除自己的笔记仍然成功 |
 | 打补丁后的路径 | 反例下 `BuggyCache.CanDelete` 在第一个分支直接返回 alice 的结论，没有到达数据库检查 |
 | 结果 | **被推翻**（contradicted） |
+
+![图 2 · 缓存键只有 noteID 时的跨租户反例，以及修订版的缓存键](/images/harness/codex/ch06/fig2-cache-counterexample.png)
 
 这正是 1.4 里第一条结构性质询要抓的问题：缓存是一种"聚合的策略输入"，它的结论没有绑定到同一个主体上。同时它也是"复用已保存的授权"，继承来的信任没有在使用点重新判断。
 
@@ -434,20 +439,9 @@ GOPROXY=off GOTOOLCHAIN=local go mod why -m golang.org/x/net
 
 ### 5.2 当前结构
 
-```mermaid
-flowchart LR
-    U["已认证请求<br/>tenant, user"] --> MW["认证中间件"]
-    MW --> H1["GetNote handler<br/>自己查归属"]
-    MW --> H2["DeleteNote handler<br/>（C1：漏查）"]
-    MW --> H3["ExportTenantNotes handler<br/>（信任参数 tenant_id）"]
-    MW --> H4["GetAttachment handler<br/>（漏查租户）"]
-    H1 --> DB[("notes 表<br/>按 id 查询")]
-    H2 --> DB
-    H3 --> DB
-    H4 --> DB
-```
+![图 3 · 结构性加固前后：检查从各个 handler 挪到租户限定的数据访问层](/images/harness/codex/ch06/fig3-hardening-before-after.png)
 
-数据访问层提供的是 `GetByID(id)` 这样不带租户的方法，任何 handler 都可以绕过检查直接调用。
+图 3 左侧是当前结构。数据访问层提供的是 `GetByID(id)` 这样不带租户的方法，任何 handler 都可以绕过检查直接调用。
 
 ### 5.3 三个方案
 
@@ -508,21 +502,7 @@ Go 的类型系统挡不住包外写出零值 `Scope{}`，所以每个方法开�
 
 ### 5.5 变更后的结构（方案 B）
 
-```mermaid
-flowchart LR
-    U["已认证请求<br/>tenant, user"] --> MW["认证中间件<br/>构造 Scope"]
-    MW --> H1["GetNote handler"]
-    MW --> H2["DeleteNote handler"]
-    MW --> H3["ExportTenantNotes handler"]
-    MW --> H4["GetAttachment handler"]
-    H1 --> R["租户限定的数据访问层<br/>所有方法都要 Scope"]
-    H2 --> R
-    H3 --> R
-    H4 --> R
-    R --> DB[("notes 表<br/>WHERE tenant_id AND owner_id")]
-```
-
-两张图用的是同一组组件和同一个抽象层级，区别只在"检查发生在哪"。
+见图 3 右侧。左右两边用的是同一组组件和同一个抽象层级，区别只在"检查发生在哪"：handler 不再各自检查，所有查询都经过要求 `Scope` 的数据访问层。
 
 ### 5.6 推荐
 
