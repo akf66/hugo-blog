@@ -27,7 +27,7 @@ tags:
 
 **翻译约定**
 
-- 代码块、命令、参数、字段名、文件路径、工具名保留英文，方便和原仓库对照。
+- 命令、参数、字段名、文件路径、工具名保留英文，方便和原仓库对照。代码块里的文档模板（`SECURITY.md`、加固提案）和 JSON 示例中的说明性文字已译成中文；JSON 字段名和枚举值属于契约，保留英文。
 - 原文中的相对链接做了改写：指向其他技能或本技能 `references/` 的，改成本页锚点；指向插件级共享文档（如 `../../references/artifact-storage.md`、`../../schemas/*.json`）和脚本、资源文件的，链接到原仓库同一版本；`app://` 形式的客户端内部链接只保留文字。
 - 原文中正文里提到的路径（写在代码格式里的，例如"阅读 `../../references/artifact-storage.md`"）保持原样，它们是相对技能目录的路径，不是本页链接。
 - 标题层级统一下移：每个技能是二级标题，技能内部章节从三级开始，`references/` 文档以"参考 ·"开头。
@@ -151,32 +151,34 @@ tags:
 使用有助于审查者判断什么是、什么不是发现项的章节：
 
 ```markdown
-# Security Policy
+# 安全策略（Security Policy）
 
-## System and Scope
+## 系统与范围（System and Scope）
 
-<system purpose, deployment and exposure, covered components, owners>
+<系统用途、部署方式与暴露面、覆盖的组件、负责人>
 
-## Threat Model and Trust Boundaries
+## 威胁模型与信任边界（Threat Model and Trust Boundaries）
 
-<assets, trusted actors, attacker-controlled inputs, important boundaries and assumptions>
+<资产、受信任的参与者、攻击者可控的输入、重要的边界与假设>
 
-## Security Invariants
+## 安全不变量（Security Invariants）
 
-<controls and properties that must hold>
+<必须始终成立的控制措施和安全属性>
 
-## Reportable Findings and Severity Context
+## 可报告的发现项与严重性背景（Reportable Findings and Severity Context）
 
-<what is reportable here, realistic impact and reachability, product-specific severity context>
+<在这里什么算可报告、现实的影响与可达性、本产品特有的严重性背景>
 
-## Out of Scope, Exclusions, and Accepted Risk
+## 范围外、排除项与已接受的风险（Out of Scope, Exclusions, and Accepted Risk）
 
-<owner-confirmed exclusions and why they are not reportable>
+<负责人确认的排除项，以及它们为什么不可报告>
 
-## Known Limitations and Compensating Controls
+## 已知限制与补偿性控制（Known Limitations and Compensating Controls）
 
-<known gaps, dependencies, and controls relevant to assessment>
+<已知缺口、依赖，以及与评估相关的控制措施>
 ```
+
+> 译注：模板的标题和占位说明已译成中文，括号里是原文标题。实际给 Codex Security 用的 `SECURITY.md` 写中文或英文都可以，章节结构才是重点。
 
 保留现有的有用措辞和结构。根据系统情况增删章节；不要添加空洞的样板内容，也不要将敏感的发现项细节复制到仓库中。
 
@@ -1155,7 +1157,7 @@ GET /repos/{owner}/{repo}/issues/{issue_number}
   "schema_version": "triage-finding/v0",
   "repository": {
     "path": "/path/to/repo",
-    "revision": "optional git sha"
+    "revision": "可选的 git sha"
   },
   "findings": []
 }
@@ -1170,16 +1172,16 @@ GET /repos/{owner}/{repo}/issues/{issue_number}
   "triage_item_id": "triage-001",
   "input_id": "scanner-or-user-id",
   "source_type": "sarif",
-  "title": "finding title",
+  "title": "发现项标题",
   "normalized_input": {
-    "vulnerable_component": "package, file, API, route, function, service, or unknown",
-    "claimed_source": "attacker-controlled input or unknown",
-    "claimed_sink": "sink or broken control or unknown",
-    "claimed_control": "missing or bypassed guard, sanitizer, auth check, or unknown",
-    "affected_version_or_path": "affected version, path, config, or unknown",
-    "preconditions": ["required condition"],
-    "impact": "claimed impact or unknown",
-    "references": ["source-provided reference"]
+    "vulnerable_component": "软件包、文件、API、路由、函数、服务，或 unknown",
+    "claimed_source": "攻击者可控的输入，或 unknown",
+    "claimed_sink": "汇点（sink）或失效的控制，或 unknown",
+    "claimed_control": "缺失或被绕过的防护、净化器（sanitizer）、鉴权检查，或 unknown",
+    "affected_version_or_path": "受影响的版本、路径、配置，或 unknown",
+    "preconditions": ["所需的前提条件"],
+    "impact": "所声称的影响，或 unknown",
+    "references": ["来源提供的参考资料"]
   },
   "verdict": "confirmed",
   "confidence": "high",
@@ -1188,35 +1190,37 @@ GET /repos/{owner}/{repo}/issues/{issue_number}
       "label": "entrypoint",
       "path": "relative/path",
       "lines": "12-18",
-      "detail": "why this location matters"
+      "detail": "这个位置为什么重要"
     }
   ],
-  "reachable_path": ["step 1", "step 2"],
+  "reachable_path": ["第 1 步", "第 2 步"],
   "boundary_assessment": {
-    "product_surface": "hosted service, CLI, library API, local developer UI, MCP/tooling, example/demo, test/fixture, docs, generated, vendored, or unknown",
-    "source_trust": "untrusted, trusted_operator, trusted_developer_config, local_only, or unknown",
+    "product_surface": "托管服务、CLI、库 API、本地开发者 UI、MCP/工具、示例/演示、测试/夹具（fixture）、文档、生成代码、第三方内置代码（vendored），或 unknown",
+    "source_trust": "untrusted、trusted_operator、trusted_developer_config、local_only 或 unknown",
     "boundary_crossed": true,
-    "policy_basis": "SECURITY.md, package/deploy evidence, product docs, code comments, or unknown"
+    "policy_basis": "SECURITY.md、打包/部署证据、产品文档、代码注释，或 unknown"
   },
   "exploitability_stack_rank": {
     "rank_queue": "confirmed",
     "rank": 1,
-    "rationale": "why this finding is more or less exploitable than other findings with the same verdict",
+    "rationale": "与同一结论下的其他发现项相比，这个发现项为什么更容易或更难被利用",
     "drivers": [
-      "attacker reachability",
-      "privilege required",
-      "preconditions",
-      "source-to-sink control",
-      "guard strength"
+      "攻击者可达性",
+      "所需权限",
+      "前提条件",
+      "从来源到汇点的控制程度",
+      "防护强度"
     ]
   },
-  "evidence": ["static evidence observed"],
-  "counterevidence": ["static evidence that weakens or defeats the claim"],
-  "proof_gaps": ["missing evidence or reason for human review"],
+  "evidence": ["观察到的静态证据"],
+  "counterevidence": ["削弱或推翻该主张的静态证据"],
+  "proof_gaps": ["缺失的证据，或需要人工审查的原因"],
   "recommended_next_step": "fix-finding",
-  "fix_finding_handoff": "prompt-ready summary for confirmed findings"
+  "fix_finding_handoff": "针对已确认发现项、可直接作为提示词的摘要"
 }
 ```
+
+> 译注：JSON 的字段名和取值固定的枚举值（如 `confirmed`、`high`、`entrypoint`、`fix-finding`、`source_trust` 的几个取值、`unknown`）是契约的一部分，保留英文；只翻译了说明性的占位文字。
 
 必需的来源类型值：
 
@@ -1401,7 +1405,7 @@ GET /repos/{owner}/{repo}/issues/{issue_number}
     {
       "id": "finding-or-issue-id",
       "status": "fixed|still_vulnerable|inconclusive",
-      "evidence": "specific current source, exploit, test, or proof-gap evidence"
+      "evidence": "具体的当前源代码、漏洞利用、测试或证明缺口证据"
     }
   ]
 }
@@ -1654,19 +1658,19 @@ cmd.exe /d /v:off /s /c '""%patchRiskPluginRoot%\scripts\launch_codex_security_m
 解释问题、证明其结构性成因的证据、有意义的替代方案以及建议。一个实用的大纲如下：
 
 ```markdown
-# Security Hardening Proposal: <title>
+# 安全加固提案（Security Hardening Proposal）：<标题>
 
-## Recommendation
+## 建议（Recommendation）
 
-## Evidence and Current Design
+## 证据与当前设计（Evidence and Current Design）
 
-## Desired Invariants and Constraints
+## 期望的不变量与约束（Desired Invariants and Constraints）
 
-## Options and Tradeoffs
+## 方案与权衡（Options and Tradeoffs）
 
-## Migration and Validation
+## 迁移与验证（Migration and Validation）
 
-## Open Decisions
+## 待定决策（Open Decisions）
 ```
 
 让建议在不阅读原始发现项（finding）的情况下也能被理解。用简短的标题定义证据标识符，并解释每个被引用的条目确立了什么。在已知时引用源代码位置和修订版本。将所提供的主张、经检查的证据、推断和设计预期区分开来。
